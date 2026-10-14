@@ -1,0 +1,350 @@
+[
+ {
+  "file": "nw00.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl00.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw04.webp",
+  "native": "glitter",
+  "tall": false,
+  "legend": true
+ },
+ {
+  "file": "nw01.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl01.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw11.webp",
+  "native": "holo",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw02.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl02.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw13.webp",
+  "native": "glow",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw03.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl03.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw15.webp",
+  "native": "glow",
+  "tall": false,
+  "legend": true
+ },
+ {
+  "file": "fl04.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw05.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw16.webp",
+  "native": "holo",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl05.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw06.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw18.webp",
+  "native": "glow",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl06.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw07.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw20.webp",
+  "native": "glow",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl07.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw08.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw21.webp",
+  "native": "glitter",
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl08.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw09.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw31.webp",
+  "native": "gold",
+  "tall": false,
+  "legend": true
+ },
+ {
+  "file": "fl09.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw10.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw23.webp",
+  "native": "glitter",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl10.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl11.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw26.webp",
+  "native": "holo",
+  "tall": false,
+  "legend": true
+ },
+ {
+  "file": "nw12.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl12.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw27.webp",
+  "native": "holo",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl13.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw14.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw28.webp",
+  "native": "holo",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl14.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl15.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw30.webp",
+  "native": "holo",
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl16.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw17.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw22.webp",
+  "native": "gold",
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl17.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl18.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw19.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl19.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl20.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl21.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl22.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl23.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "nw24.webp",
+  "native": null,
+  "tall": true,
+  "legend": false
+ },
+ {
+  "file": "fl24.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw25.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "fl25.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ },
+ {
+  "file": "nw29.webp",
+  "native": null,
+  "tall": false,
+  "legend": false
+ }
+]

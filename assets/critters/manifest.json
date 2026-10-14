@@ -1,0 +1,122 @@
+{
+ "insects": [
+  {
+   "file": "i00.webp",
+   "name": "ladybird"
+  },
+  {
+   "file": "i01.webp",
+   "name": "bee"
+  },
+  {
+   "file": "i02.webp",
+   "name": "butterfly"
+  },
+  {
+   "file": "i03.webp",
+   "name": "snail"
+  },
+  {
+   "file": "i04.webp",
+   "name": "caterpillar"
+  },
+  {
+   "file": "i05.webp",
+   "name": "dragonfly"
+  },
+  {
+   "file": "i06.webp",
+   "name": "ant"
+  },
+  {
+   "file": "i07.webp",
+   "name": "beetle"
+  },
+  {
+   "file": "i08.webp",
+   "name": "glass butterfly"
+  },
+  {
+   "file": "i09.webp",
+   "name": "grasshopper"
+  },
+  {
+   "file": "i10.webp",
+   "name": "blue dragonfly"
+  },
+  {
+   "file": "i11.webp",
+   "name": "spider"
+  },
+  {
+   "file": "i12.webp",
+   "name": "spotty snail"
+  },
+  {
+   "file": "i13.webp",
+   "name": "fly"
+  }
+ ],
+ "pets": [
+  {
+   "file": "p00.webp",
+   "name": "puppy"
+  },
+  {
+   "file": "p01.webp",
+   "name": "kitten"
+  },
+  {
+   "file": "p02.webp",
+   "name": "bunny"
+  },
+  {
+   "file": "p03.webp",
+   "name": "hedgehog friend"
+  },
+  {
+   "file": "p04.webp",
+   "name": "frog"
+  },
+  {
+   "file": "p05.webp",
+   "name": "parrot"
+  },
+  {
+   "file": "p06.webp",
+   "name": "mouse"
+  },
+  {
+   "file": "p07.webp",
+   "name": "hen"
+  },
+  {
+   "file": "p08.webp",
+   "name": "bluebird"
+  },
+  {
+   "file": "p09.webp",
+   "name": "squirrel"
+  },
+  {
+   "file": "p10.webp",
+   "name": "owl"
+  },
+  {
+   "file": "p11.webp",
+   "name": "chameleon"
+  },
+  {
+   "file": "p12.webp",
+   "name": "monkey"
+  },
+  {
+   "file": "p13.webp",
+   "name": "brown bunny"
+  },
+  {
+   "file": "p14.webp",
+   "name": "sloth"
+  }
+ ]
+}
