@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@@APP_NAME@@</title>
+<link rel="icon" type="image/png" href="@@FAVICON@@" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: 'Teachers Pet'; src: url('@@FONT@@') format('truetype'); font-display: swap; }
+  :root {
+    --ocean: #38BDF8; --ocean-dark: #0369A1; --ocean-light: rgba(56,189,248,0.16);
+    --navy-dark: #1E293B;
+    --aqua: #22D3EE; --aqua-dark: #0E7490; --aqua-light: rgba(34,211,238,0.16);
+    --coral: #FB7185; --coral-dark: #BE123C; --coral-light: rgba(251,113,133,0.18);
+    --sand: #FBBF24; --sand-dark: #B45309; --sand-light: rgba(251,191,36,0.16);
+    --green: #3BA55D; --green-light: rgba(59,165,93,0.16);
+    --purple: #C084FC; --purple-light: rgba(192,132,252,0.16);
+    --grey-bg: #F3F5EE; --card-bg: #FFFBEF; --surface-2: #F1E6C2; --border: #D8C9A0;
+    --text: #2E2A1F; --text-soft: #6B5E42;
+    --good: #1E7A34; --good-bg: rgba(30,122,52,0.14); --bad: #C0392B; --bad-bg: rgba(192,57,43,0.14);
+    --holo-gradient: linear-gradient(120deg, #38BDF8 0%, #C084FC 35%, #FB7185 65%, #FBBF24 100%);
+    --holo-gradient-dark: linear-gradient(120deg, #4E6B4A 0%, #5F7D59 25%, #6E8C66 45%, #5A7855 65%, #4A6646 85%, #4E6B4A 100%);
+    --font: 'Teachers Pet', 'Patrick Hand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 125%; }
+  html, body { height: 100%; }
+  body { margin: 0; position: relative; font-family: var(--font); background: var(--grey-bg); color: var(--text); touch-action: manipulation; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: url('@@BG@@'); background-size: cover; background-position: center; background-attachment: fixed; opacity: 0.5; }
+  h1, h2, h3, button, select, input { font-family: var(--font); }
+
+  /* ---------- header (same as MathIT) ---------- */
+  header { position: relative; background: #E8EEE2; color: #000; padding: 22px 16px 40px; text-align: center; overflow: hidden; }
+  header::before { content: ''; position: absolute; inset: 0; background: url('@@HEADER_BG@@') center / cover no-repeat; opacity: 0.55; pointer-events: none; }
+  @keyframes holo { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+  @media (prefers-reduced-motion: reduce) { header, .tab.active { animation: none !important; } }
+  header h1 { margin: 0; font-size: 1.7rem; letter-spacing: 0.02em; color: #000; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
+  .title-row { display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; z-index: 1; }
+  .title-row .logo { height: 64px; width: auto; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.18)); }
+  .mascot { display: block; margin: 0 auto 6px; width: 170px; height: auto; }
+  .mascot.small { width: 120px; }
+  .card.has-mascot { position: relative; padding-right: 130px; }
+  .card.has-mascot .mascot-corner { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 104px; height: auto; }
+  @media (max-width: 520px) { .card.has-mascot { padding-right: 20px; } .card.has-mascot .mascot-corner { display: none; } }
+  .byline { margin: 4px 0 0; font-size: 0.95rem; color: #000; position: relative; z-index: 1; }
+  .greet { position: relative; z-index: 1; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .chip { font-weight: 800; color: #fff; font-size: 0.85rem; background: #4E6B4A; border-radius: 16px; padding: 5px 14px; }
+  .chip.streak { background: #B45309; border: 2px solid #fff; }
+  .linkbtn { color: #000; text-decoration: underline; font-size: 0.8rem; cursor: pointer; background: none; border: none; padding: 0; }
+  .modebtn { background: #fff; color: #000; border: 2px solid #4E6B4A; border-radius: 16px; padding: 4px 12px; font-size: 0.8rem; font-weight: 800; cursor: pointer; }
+  .modebtn.on { background: var(--sand); color: #3B2A06; border-color: #fff; }
+  .tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px auto 0; position: relative; z-index: 1; max-width: 980px; }
+  .tab { background: #4E6B4A; color: #fff; border: 2px solid #fff; border-radius: 20px; padding: 6px 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+  .tab:hover { background: #3D5A37; }
+  .tab.soon { background: rgba(255,255,255,0.7); color: #4E6B4A; border: 2px dashed #8FA888; }
+  .tab.active { background: var(--holo-gradient); background-size: 220% 220%; animation: holo 7s ease infinite alternate; border-color: #fff; text-shadow: 0 1px 3px rgba(8,20,30,0.55); box-shadow: 0 2px 10px rgba(192,132,252,0.45); opacity: 1; }
+  header .wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 30px; display: block; }
+
+  /* ---------- page ---------- */
+  main { max-width: 920px; margin: 0 auto; padding: 20px 16px 60px; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(2,132,199,0.07); }
+  .center { text-align: center; }
+  .welcome { max-width: 520px; margin: 28px auto; text-align: center; }
+  .section-heading { font-weight: 800; color: var(--navy-dark); font-size: 1.15rem; margin: 26px 0 10px; padding-left: 2px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .section-heading small { font-size: 0.75rem; color: var(--text-soft); font-weight: 400; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .tile { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; cursor: pointer; text-align: left; display: flex; gap: 12px; align-items: center; border-top: 4px solid var(--tile-color, var(--ocean)); transition: transform 0.08s ease, box-shadow 0.08s ease; color: var(--text); font-size: 1rem; width: 100%; }
+  .tile:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(2,132,199,0.16); }
+  .tile .ico { flex: 0 0 auto; width: 54px; height: 54px; border-radius: 12px; background: var(--tile-bg, var(--ocean-light)); display: flex; align-items: center; justify-content: center; }
+  .tile .ico svg { width: 46px; height: 46px; }
+  .tile h3 { margin: 0 0 2px; font-size: 1rem; color: var(--navy-dark); }
+  .tile p { margin: 0; font-size: 0.8rem; color: var(--text-soft); }
+  .tile .badge { display: inline-block; font-size: 0.68rem; font-weight: 700; color: var(--good); background: var(--good-bg); border-radius: 8px; padding: 2px 7px; margin-top: 5px; }
+  .c-coral { --tile-color: var(--coral); --tile-bg: var(--coral-light); }
+  .c-sand { --tile-color: var(--sand); --tile-bg: var(--sand-light); }
+  .c-ocean { --tile-color: var(--ocean); --tile-bg: var(--ocean-light); }
+  .c-aqua { --tile-color: var(--aqua); --tile-bg: var(--aqua-light); }
+  .c-green { --tile-color: var(--green); --tile-bg: var(--green-light); }
+  .c-purple { --tile-color: var(--purple); --tile-bg: var(--purple-light); }
+
+  /* sound card tiles */
+  .sound-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+  .sound-tile { background: var(--card-bg); border: 1px solid var(--border); border-top: 4px solid var(--coral); border-radius: 16px; padding: 10px 8px 8px; cursor: pointer; text-align: center; position: relative; transition: transform 0.08s ease; color: var(--text); }
+  .sound-tile:hover { transform: translateY(-3px); }
+  .sound-tile .g { font-size: 2.3rem; line-height: 1; color: var(--navy-dark); }
+  .sound-tile .g.long { font-size: 1.15rem; line-height: 2.1rem; }
+  .sc-letter.long .lo { font-size: 2.6rem; text-align: center; }
+  .ltile.wide { width: 84px; }
+  .sound-tile svg { width: 54px; height: 54px; display: block; margin: 4px auto 0; }
+  .sound-tile .w { font-size: 0.78rem; color: var(--text-soft); }
+  .sound-tile.out { opacity: 0.45; }
+  .sound-tile .star { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; margin: 0; }
+
+  .backbtn { background: none; border: none; color: var(--navy-dark); font-weight: 800; cursor: pointer; font-size: 0.92rem; padding: 4px 0; margin-bottom: 10px; display: inline-flex; align-items: center; gap: 6px; }
+  .backbtn:hover { text-decoration: underline; }
+  h2.title { color: var(--navy-dark); margin: 0 0 6px; font-size: 1.4rem; }
+  .subtext { color: var(--text-soft); font-size: 0.9rem; margin: 0 0 12px; line-height: 1.4; }
+  .pill { display: inline-block; font-size: 0.75rem; font-weight: 700; border-radius: 8px; padding: 3px 10px; margin: 0 6px 10px 0; }
+  .pill.coral { color: var(--coral-dark); background: var(--coral-light); }
+  .pill.ocean { color: var(--ocean-dark); background: var(--ocean-light); }
+  .pill.sand { color: var(--sand-dark); background: var(--sand-light); }
+  .pill.green { color: var(--good); background: var(--good-bg); }
+
+  button.action { background: linear-gradient(120deg, var(--coral), #FB8FA0); color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin: 8px 8px 0 0; }
+  button.action:hover { filter: brightness(1.08); }
+  button.secondary { background: var(--surface-2); color: var(--ocean-dark); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin: 8px 8px 0 0; }
+  button.secondary:hover { border-color: var(--ocean); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  select { border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 12px; font-size: 1rem; background: var(--surface-2); color: var(--text); max-width: 100%; }
+
+  .adult-note { background: var(--sand-light); border-left: 4px solid var(--sand); border-radius: 10px; padding: 10px 14px; font-size: 0.9rem; margin: 0 0 14px; line-height: 1.45; }
+  .adult-note b { color: var(--sand-dark); }
+  .feedback { display: none; margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-weight: 700; }
+  .feedback.good { display: block; background: var(--good-bg); color: var(--good); }
+  .feedback.bad { display: block; background: var(--bad-bg); color: var(--bad); }
+  .feedback.info { display: block; background: var(--aqua-light); color: var(--aqua-dark); }
+  .score { display: inline-block; background: var(--ocean-light); color: var(--ocean-dark); font-weight: 700; font-size: 0.85rem; border-radius: 8px; padding: 3px 10px; margin-bottom: 12px; }
+
+  /* activity bits */
+  .stage { background: var(--aqua-light); border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 12px; }
+  .stage .big-pic svg { width: 170px; height: 170px; }
+  .bigword { font-size: 3.2rem; color: var(--navy-dark); letter-spacing: 0.04em; line-height: 1.25; }
+  .hugeletter { font-size: 7rem; line-height: 1; color: var(--navy-dark); }
+  .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .choice { background: #fff; border: 2.5px solid var(--border); border-radius: 14px; padding: 12px; cursor: pointer; font-size: 1.7rem; color: var(--navy-dark); min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: transform 0.06s ease; }
+  .choice:hover { border-color: var(--ocean); transform: translateY(-2px); }
+  .choice svg { width: 110px; height: 110px; }
+  .choice .lbl { font-size: 0.8rem; color: var(--text-soft); }
+  .choice.sel { border-color: var(--ocean-dark); background: var(--ocean-light); }
+  .choice.right { border-color: var(--good); background: var(--good-bg); }
+  .choice.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .choice.letter { font-size: 3rem; min-height: 100px; }
+  .choice .dots { display: flex; gap: 6px; }
+  .choice .dots svg { width: 16px; height: 16px; }
+  .choice.sentence { font-size: 1.4rem; }
+  .slots { display: flex; gap: 10px; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
+  .slot { width: 64px; height: 76px; border-bottom: 4px solid var(--navy-dark); font-size: 2.6rem; display: flex; align-items: flex-end; justify-content: center; color: var(--navy-dark); background: rgba(255,255,255,0.6); border-radius: 8px 8px 0 0; }
+  .tiles { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .ltile { width: 62px; height: 62px; background: #fff; border: 2.5px solid var(--border); border-radius: 12px; font-size: 2rem; cursor: pointer; color: var(--navy-dark); }
+  .ltile.vowel { background: #FFE4E6; }
+  .ltile:disabled { opacity: 0.5; }
+  .bins { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .bin { background: #fff; border: 3px dashed var(--border); border-radius: 16px; padding: 12px; cursor: pointer; text-align: center; font-size: 2.4rem; color: var(--navy-dark); }
+  .bin svg { width: 70px; height: 70px; display: block; margin: 0 auto; }
+  .bin .sorted { font-size: 1rem; color: var(--text-soft); min-height: 1.4em; }
+  .bin:hover { border-color: var(--ocean); }
+  .markrow { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .mark { font-size: 1.1rem; padding: 14px 26px; border-radius: 14px; border: none; cursor: pointer; font-weight: 800; }
+  .mark.yes { background: var(--good); color: #fff; }
+  .mark.no { background: #fff; color: var(--bad); border: 2.5px solid var(--bad); }
+  .done-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .wchip { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 4px 12px; font-size: 1.3rem; }
+  .wchip.miss { border-color: var(--bad); color: var(--bad); }
+
+  /* sound card page */
+  .sc-top { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .sc-letter { background: #fff; border: 3px solid var(--coral); border-radius: 22px; width: 170px; height: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .sc-letter .lo { font-size: 6rem; line-height: 0.95; color: var(--navy-dark); }
+  .sc-letter .up { font-size: 1.6rem; color: var(--text-soft); }
+  .sc-pic { text-align: center; }
+  .sc-pic svg { width: 170px; height: 170px; }
+  .sc-pic .word { font-size: 2.2rem; color: var(--navy-dark); }
+  .sc-pic .word b { color: var(--coral-dark); }
+  .rhyme { font-size: 1.35rem; line-height: 1.6; white-space: pre-line; color: var(--navy-dark); }
+  .story { font-size: 1.15rem; line-height: 1.75; }
+  .story.decodable { font-size: 1.6rem; line-height: 2.3; letter-spacing: 0.02em; color: var(--navy-dark); }
+  .story-title { font-size: 1.3rem; color: var(--navy-dark); margin: 4px 0 8px; }
+  .q { border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 12px; }
+  .q .qt { font-weight: 700; margin-bottom: 8px; }
+  .q .think { font-size: 0.72rem; font-weight: 700; color: var(--purple); background: var(--purple-light); border-radius: 6px; padding: 1px 7px; margin-left: 6px; }
+  .q .opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 1rem; cursor: pointer; color: var(--text); }
+  .opt:hover { border-color: var(--ocean); }
+  .opt.right { border-color: var(--good); background: var(--good-bg); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-bg); text-decoration: line-through; }
+
+  /* heart words: a small heart sits above the letters learned by heart */
+  .hw { color: var(--coral-dark); white-space: nowrap; }
+  .hp { position: relative; display: inline-block; line-height: 1; }
+  .hp::before { content: ''; position: absolute; left: 50%; top: -0.32em; width: 0.42em; height: 0.38em; transform: translateX(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 18'%3E%3Cpath d='M10 17 C3 11 0 8 0 5 A5 5 0 0 1 10 3 A5 5 0 0 1 20 5 C20 8 17 11 10 17Z' fill='%23E11D48'/%3E%3C/svg%3E") no-repeat center / contain; }
+  .heart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .heart-card { background: #fff; border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 8px 12px; text-align: center; font-size: 2.2rem; }
+  .heart-card small { display: block; font-size: 0.75rem; color: var(--text-soft); margin-top: 6px; }
+
+  .task-item { display: flex; align-items: center; gap: 12px; cursor: pointer; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; width: 100%; text-align: left; color: var(--text); font-size: 0.95rem; }
+  .task-item:hover { transform: translateY(-2px); }
+  .task-item .go { margin-left: auto; color: var(--coral-dark); font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
+
+  .sticker-book { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .sticker { background: #fff; border: 1.5px solid var(--border); border-radius: 16px; padding: 10px; text-align: center; font-size: 0.75rem; color: var(--text-soft); }
+  .sticker svg { width: 80px; height: 80px; }
+  .medal { width: 80px; height: 80px; margin: 0 auto; border-radius: 50%; background: var(--holo-gradient); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.6rem; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,0.4); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--border); }
+
+  /* garden */
+  .garden-intro { display: flex; gap: 16px; align-items: center; }
+  .garden-intro .mascot { width: 120px; margin: 0; flex: 0 0 auto; }
+  .bubble { background: #fff; border: 2px solid var(--border); border-radius: 18px; padding: 12px 16px; font-size: 1.1rem; color: var(--navy-dark); position: relative; }
+  .bubble::before { content: ''; position: absolute; left: -11px; top: 50%; width: 18px; height: 18px; background: #fff; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); transform: translateY(-50%) rotate(45deg); }
+  .bed { background: linear-gradient(#C9A27A, #A87E57); border: 3px solid #7A5638; border-radius: 22px; padding: 14px 12px 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 22px 4px; box-shadow: inset 0 6px 0 rgba(255,255,255,0.18); }
+  .plot { background: none; border: none; cursor: pointer; text-align: center; padding: 0; color: #FFF8E7; font-family: var(--font); }
+  .plot .tag { position: relative; z-index: 2; display: inline-block; background: #FFFBEF; color: var(--navy-dark); border-radius: 8px; padding: 1px 8px; font-size: 0.95rem; border: 1.5px solid #7A5638; }
+  .plot:hover .plotbox { transform: translateY(-3px); }
+  .plotbox { position: relative; width: 86px; height: 96px; margin: 0 auto -6px; }
+  .plotbox svg { width: 100%; height: 100%; display: block; }
+  .bloom { position: absolute; left: 50%; top: 0; width: 66px; height: 66px; transform: translateX(-50%); }
+  .bloom.tall { top: 4px; height: 84px; width: 72px; }
+  .bloom img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .bloom::after { content: ''; position: absolute; inset: 0; pointer-events: none; -webkit-mask: var(--img) center / contain no-repeat; mask: var(--img) center / contain no-repeat; }
+  /* golden: the flower turns to gold leaf and a shine sweeps across */
+  .fx-gold img { filter: sepia(1) saturate(4.5) hue-rotate(-8deg) brightness(1.08) contrast(1.05) drop-shadow(0 0 3px rgba(251,191,36,0.9)); }
+  .fx-gold::after { background: linear-gradient(115deg, transparent 35%, rgba(255,255,240,0.95) 50%, transparent 65%); background-size: 260% 100%; animation: sweep 2.8s ease-in-out infinite; }
+  @keyframes sweep { 0% { background-position: 130% 0; } 60%, 100% { background-position: -130% 0; } }
+  /* holographic: a rainbow foil that drifts across the petals */
+  .fx-holo::after { background: linear-gradient(120deg, #38BDF8, #C084FC, #FB7185, #FBBF24, #86EFAC, #38BDF8); background-size: 300% 300%; mix-blend-mode: hard-light; opacity: 0.75; animation: holo 3.5s linear infinite alternate; }
+  .fx-holo img { filter: saturate(0.7) brightness(1.1); }
+  /* glitter: tiny sparkles that twinkle */
+  .fx-glitter::after { background-image: radial-gradient(circle, #fff 0 0.9px, transparent 1.3px), radial-gradient(circle, #FFF3B0 0 1.1px, transparent 1.5px), radial-gradient(circle, #fff 0 0.7px, transparent 1.1px), linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 70%); background-size: 11px 13px, 17px 15px, 23px 19px, 250% 100%; background-position: 0 0, 5px 7px, 9px 3px, 0 0; mix-blend-mode: screen; animation: twinkle 1.4s steps(3) infinite; }
+  .fx-glitter img { filter: saturate(1.2) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
+  @keyframes twinkle { 0% { opacity: 1; background-position: 0 0, 5px 7px, 9px 3px, 120% 0; } 50% { opacity: 0.6; background-position: 4px 3px, 1px 2px, 3px 11px, 0% 0; } 100% { opacity: 1; background-position: 7px 6px, 9px 1px, 14px 8px, -120% 0; } }
+  /* glow in the dark: a soft green glow that breathes, brighter with the lights off */
+  .fx-glow img { filter: drop-shadow(0 0 4px #C6FFB8) drop-shadow(0 0 10px #7CFF8A); animation: breathe 2.6s ease-in-out infinite; }
+  @keyframes breathe { 50% { filter: drop-shadow(0 0 7px #E2FFD9) drop-shadow(0 0 18px #7CFF8A); } }
+  .fx-native::after { display: none; }
+  .fx-native:not(.fx-glow) img { filter: none; }
+  .fx-native.fx-glow img { filter: none; animation: neon 2.4s ease-in-out infinite; }
+  @keyframes neon { 50% { filter: brightness(1.25) saturate(1.2); } }
+  .patch-banner { text-align: center; }
+  .patch-banner img { width: 100%; max-width: 460px; height: auto; display: block; margin: 0 auto; }
+  .patch-banner h2 { margin: 6px 0 0; color: var(--navy-dark); font-size: 1.6rem; }
+  .bloom-tile { display: flex; align-items: center; gap: 16px; cursor: pointer; width: 100%; text-align: left; font-size: 1rem; color: var(--text); border-top: 4px solid var(--green); }
+  .bloom-tile img { width: 190px; max-width: 45%; height: auto; flex: 0 0 auto; }
+  .bloom-tile h3 { margin: 0 0 4px; font-size: 1.3rem; color: var(--navy-dark); }
+  .bloom-tile:hover { transform: translateY(-2px); }
+  .tab img { height: 18px; width: auto; vertical-align: -4px; margin-right: 4px; }
+  .visitors, .pet-yard { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 8px; }
+  .critter { display: flex; flex-direction: column; align-items: center; width: 104px; text-align: center; }
+  .critter img { width: 72px; height: 66px; object-fit: contain; }
+  .critter .clabel { font-size: 0.72rem; color: var(--text-soft); line-height: 1.2; margin-top: 2px; }
+  .critter.locked img { filter: brightness(0) opacity(0.18); }
+  .critter.insect.earned img { animation: hover 3s ease-in-out infinite; }
+  .critter.pet { width: 130px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 10px 6px; }
+  .critter.pet img { width: 100px; height: 92px; }
+  .critter.pet.earned { border: 2px solid var(--green); box-shadow: 0 4px 12px rgba(59,165,93,0.18); }
+  @keyframes hover { 50% { transform: translateY(-6px) rotate(-3deg); } }
+  .garden-night .critter .clabel { color: var(--text-soft); }
+  .garden-night .bed { background: linear-gradient(#2A2F45, #1B1F30); border-color: #10131E; }
+  .garden-night .fx-glow img { filter: brightness(1.25) drop-shadow(0 0 8px #E2FFD9) drop-shadow(0 0 22px #7CFF8A); }
+  .garden-night .bloom:not(.fx-glow) img, .garden-night .plotbox svg { filter: brightness(0.45) saturate(0.6); }
+  .garden-night .bloom:not(.fx-glow)::after { opacity: 0.2; }
+  .finish-legend { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 10px; }
+  .finish-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-soft); }
+  .finish-legend .bloom { position: relative; left: auto; transform: none; width: 44px; height: 44px; }
+  @media (prefers-reduced-motion: reduce) { .bloom::after, .fx-glow img { animation: none !important; } }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font-size: 0.85rem; color: var(--text-soft); }
+  .legend svg { width: 40px; height: 44px; vertical-align: middle; }
+  @media (max-width: 520px) { .garden-intro .mascot { width: 84px; } .bed { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); } .plotbox { width: 70px; height: 80px; } .bloom { width: 54px; height: 54px; } .bloom.tall { width: 58px; height: 70px; } }
+  .toast { position: fixed; left: 50%; top: 16px; transform: translateX(-50%); background: var(--card-bg); border: 2px solid var(--sand); border-radius: 18px; padding: 14px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; gap: 12px; align-items: center; z-index: 50; max-width: calc(100% - 32px); }
+  .toast svg, .toast .medal { width: 60px; height: 60px; flex: 0 0 auto; }
+  .range-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .muted { color: var(--text-soft); font-size: 0.85rem; }
+  footer { text-align: center; color: var(--text-soft); font-size: 0.75rem; padding: 0 16px 30px; }
+  @media (max-width: 520px) {
+    html { font-size: 112%; }
+    .choice svg { width: 84px; height: 84px; }
+    .bigword { font-size: 2.6rem; }
+    .hugeletter { font-size: 5.5rem; }
+    .sc-letter, .sc-pic svg { width: 130px; height: 130px; }
+    .sc-letter .lo { font-size: 4.6rem; }
+    .slot { width: 50px; height: 64px; font-size: 2.1rem; }
+    .ltile { width: 52px; height: 52px; font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="title-row"><img class="logo" src="@@LOGO@@" alt="" /><h1>@@APP_NAME@@</h1></div>
+  <p class="byline">By Debby Smit Educational Therapy</p>
+  <div class="greet" id="greet"></div>
+  <nav class="tabs" id="tabs" aria-label="Levels"></nav>
+  <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C240,60 480,0 720,18 C960,36 1200,60 1440,28 L1440,60 L0,60 Z" fill="#F3F5EE"></path></svg>
+</header>
+<main id="app"><div class="card welcome">Loading...</div></main>
+<footer>@@APP_NAME@@ follows a structured, multisensory phonics sequence in the Orton-Gillingham tradition. It supports, and does not replace, work with a trained therapist.</footer>
+
+<script>
+/*@@CONTENT@@*/
+</script>
+<script>
+/*@@ILLUS@@*/
+</script>
+<script src="/readit-auth.js"></script>
+<script>
+'use strict';
+const APP_NAME = '@@APP_NAME@@';
+const FLOWER_IMGS = /*@@FLOWERS@@*/[];
+const FLOWER_META = /*@@FLOWER_META@@*/[];
+const PATCH_IMG = '@@PATCH@@';
+const CRITTERS = /*@@CRITTERS@@*/{ insects: [], pets: [] };
+const MASCOT = '@@MASCOT@@';
+const mascotImg = cls => `<img class="${cls || 'mascot'}" src="${MASCOT}" alt="Sage the hedgehog" />`;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+};
+
+/* The whole teaching sequence, in order. key is what progress is saved under
+   (card_<key>); gs are the spellings the card teaches. */
+const CARDS = [
+  ...CONTENT.level1.map(c => ({ ...c, level: 1, key: c.g, gs: [c.g], pos: c.end ? 'end' : 'start' })),
+  ...CONTENT.level2.map(c => ({ ...c, level: 2, key: c.key || c.g, gs: c.gs || [c.g] })),
+];
+const POOLS = {
+  1: { words: CONTENT.cvc, pics: CONTENT.pictureWords, fakes: CONTENT.nonsense },
+  2: { words: CONTENT.words2, pics: CONTENT.pictureWords2, fakes: CONTENT.nonsense2 },
+};
+const VOWELS = ['a', 'e', 'i', 'o', 'u'];
+const DIGRAPHS = ['sh', 'ch', 'th', 'wh', 'ck', 'ng', 'nk', 'ff', 'll', 'ss', 'zz', 'qu'];
+// Words that make sense in "It is a ___."
+const NOUNS = ('cat hat bat map pan fan can man rat bag jam cap mat sun bun nut cup bus mug bug rug tub hut pig pin bin lip dog log pot top box fox mop bed net pen hen web leg jet jug zip van kit kid cot cod den peg pet pup tin tag gap nap hip fig wig yak yam rag ' +
+  'fish dish shell ship shed chick bath moth duck sock lock rock neck bell doll hill king ring wing sink tank bank shop path chip chin sack pack deck').split(' ');
+const STAR_SVG = '<svg class="star" viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9.5 L16.5 14 L18.5 21 L12 17 L5.5 21 L7.5 14 L2 9.5 L9 9 Z" fill="#FBBF24" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+const BACK = '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const state = {
+  profile: null, mode: 'learner', level: 1, progress: {}, tasks: [], stickers: [],
+  upTo: CARDS.length - 1, view: { name: 'home' },
+};
+
+/* ---------------- sounds and words ---------------- */
+const cardByKey = k => CARDS.find(c => c.key === k);
+const cardIndex = k => CARDS.findIndex(c => c.key === k);
+const levelCards = L => CARDS.filter(c => c.level === L);
+function guide(card) {
+  if (card.say) return card.say;
+  if (card.g === 'x') return '/ks/, at the end of fox';
+  if (card.g === 'qu') return '/kw/ as in queen';
+  if (card.g === 'y') return '/y/ as in yo-yo';
+  return `/${card.g}/ as in ${card.anchor}`;
+}
+const anchorLabel = c => (c.anchor === 'yoyo' ? 'yo-yo' : c.anchor);
+function graphemes(w) {
+  const out = [];
+  for (let i = 0; i < w.length; i++) {
+    const two = w.slice(i, i + 2);
+    if (DIGRAPHS.includes(two)) { out.push(two); i++; } else out.push(w[i]);
+  }
+  return out;
+}
+function taughtSet(upTo) { const t = new Set(); CARDS.slice(0, upTo + 1).forEach(c => c.gs.forEach(g => t.add(g))); return t; }
+function canRead(w, upTo) { const t = taughtSet(upTo); return graphemes(w).every(g => t.has(g)); }
+function wordsFor(L) { return POOLS[L].words.filter(w => canRead(w, state.upTo)); }
+function picsFor(L) { return POOLS[L].pics.filter(w => canRead(w, state.upTo) && ILLUS[w]); }
+function fakesFor(L) { return POOLS[L].fakes.filter(w => canRead(w, state.upTo)); }
+function cardsTaught(L) { return CARDS.slice(0, state.upTo + 1).filter(c => c.level === L); }
+function heartsUpTo(upTo) {
+  const keys = new Set(CARDS.slice(0, upTo + 1).map(c => c.key));
+  return CONTENT.heartWords.filter(h => keys.has(h.after));
+}
+function heartsFor(L) {
+  const all = heartsUpTo(state.upTo);
+  const mine = all.filter(h => h.level === L && h.w.length > 1);
+  return mine.length ? mine : all.filter(h => h.w.length > 1);
+}
+function heartFor(word, list) {
+  const lw = word === 'I' ? 'I' : word.toLowerCase();
+  return list.find(h => h.w === lw);
+}
+function heartHTML(word, h) {
+  let out = '';
+  for (let i = 0; i < word.length; i++) {
+    const start = h.h.find(([a]) => a === i);
+    if (start) { out += `<span class="hp">${esc(word.slice(start[0], start[1]))}</span>`; i = start[1] - 1; }
+    else out += esc(word[i]);
+  }
+  return `<span class="hw">${out}</span>`;
+}
+function markHearts(text, list) {
+  return text.split(/(\s+)/).map(tok => {
+    const m = tok.match(/^([^A-Za-z]*)([A-Za-z]+)([^A-Za-z]*)$/);
+    if (!m) return esc(tok);
+    const h = heartFor(m[2], list);
+    return h ? esc(m[1]) + heartHTML(m[2], h) + esc(m[3]) : esc(tok);
+  }).join('');
+}
+function oneOff(a, b) {
+  const ga = graphemes(a), gb = graphemes(b);
+  if (ga.length !== gb.length) return false;
+  return ga.filter((g, i) => g !== gb[i]).length === 1;
+}
+function nearWords(target, pool, n) {
+  const close = shuffle(pool.filter(w => w !== target && oneOff(w, target)));
+  const rest = shuffle(pool.filter(w => w !== target && !close.includes(w)));
+  return close.concat(rest).slice(0, n);
+}
+
+/* ---------------- progress ---------------- */
+const done = key => (state.progress[key] && state.progress[key].attempted > 0);
+async function record(topic, level, question, answer, correct) {
+  const p = state.progress[topic] || (state.progress[topic] = { correct: 0, attempted: 0 });
+  p.attempted++; if (correct) p.correct++;
+  if (!window.ReadITAuth || !ReadITAuth.isSignedIn()) return;
+  try {
+    const r = await ReadITAuth.recordPractice({ topic, level: String(level), question: String(question).slice(0, 200), answer: String(answer).slice(0, 200), correct });
+    if (r && typeof r.streak === 'number' && state.profile) { state.profile.streak = r.streak; renderGreet(); }
+    if (r && r.stickers && r.stickers.length) { state.stickers = r.stickers.concat(state.stickers); celebrate(r.stickers[0]); }
+    state.tasks = state.tasks.filter(t => t.topic !== topic);
+  } catch (e) { console.warn('could not save practice:', e.message); }
+}
+
+/* ---------------- stickers ---------------- */
+function stickerArt(s) {
+  if (ILLUS[s.code]) return svgPic(s.code);
+  let label = '';
+  if (s.code.startsWith('streak')) label = s.code.slice(6);
+  else if (s.code === 'run10') label = '10';
+  else if (s.code === 'run25') label = '25';
+  else if (s.code === 'gradedone') label = 'L' + String(s.reason || '').split('|')[0];
+  else label = '<svg width="40" height="40" viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9.5 L16.5 14 L18.5 21 L12 17 L5.5 21 L7.5 14 L2 9.5 L9 9 Z" fill="#fff"/></svg>';
+  return `<div class="medal">${label}</div>`;
+}
+function stickerReason(s) {
+  if (s.kind === 'task') return 'for finishing ' + activityName(s.reason);
+  if (s.kind === 'streak') return `for a ${s.reason} day streak`;
+  if (s.code === 'termdone') { const [lv, title] = String(s.reason).split('|'); return `for finishing ${title} (Level ${lv})`; }
+  if (s.code === 'gradedone') return `for finishing Level ${s.reason}`;
+  if (s.code === 'run10' || s.code === 'run25') return `for ${s.reason} right in a row`;
+  if (s.code === 'explorer') return 'for trying sounds, words and stories';
+  if (s.code === 'collector') return 'for collecting every prize';
+  return '';
+}
+function celebrate(s) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `${stickerArt(s)}<div><b>New garden prize!</b><br><span class="muted">${esc(stickerReason(s))}</span></div>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4200);
+}
+
+/* ---------------- games ---------------- */
+// ACTS is built from CONTENT.games: one entry per game per level.
+const ACTS = {};
+const perLevel = (v, L) => (v && typeof v === 'object' ? v[L] : v);
+CONTENT.games.forEach(gm => gm.levels.forEach(L => {
+  const key = `l${L}_${gm.base}`;
+  ACTS[key] = {
+    key, base: gm.base, level: L, adultOnly: Boolean(gm.adultOnly),
+    title: perLevel(gm.title, L), desc: perLevel(gm.desc, L), adult: perLevel(gm.adult, L),
+    pic: perLevel(gm.pic, L), color: gm.color,
+  };
+}));
+
+function choiceButtons(el, items, onPick, cls) {
+  const wrap = document.createElement('div');
+  wrap.className = 'choices';
+  items.forEach(it => {
+    const b = document.createElement('button');
+    b.className = 'choice ' + (cls || '');
+    b.innerHTML = it.html;
+    b.dataset.k = it.k || '';
+    b.addEventListener('click', () => onPick(it, b, wrap));
+    wrap.appendChild(b);
+  });
+  el.appendChild(wrap);
+  return wrap;
+}
+function lockChoices(wrap) { wrap.querySelectorAll('button').forEach(b => { b.disabled = true; }); }
+const picLabelled = k => svgPic(k) + (state.mode === 'adult' ? `<span class="lbl">${esc(k)}</span>` : '');
+function markButtons(el, cb) {
+  const row = document.createElement('div');
+  row.className = 'markrow';
+  row.innerHTML = '<button class="mark yes">Correct</button><button class="mark no">Not yet</button>';
+  [true, false].forEach((v, i) => row.children[i].addEventListener('click', () => { row.querySelectorAll('button').forEach(b => { b.disabled = true; }); cb(v); }));
+  el.appendChild(row);
+}
+// Letter tiles: each sound is one tile, so sh and ck sit on a single tile.
+function tileBoard(el, gs, tiles, finish, w) {
+  const got = [];
+  el.insertAdjacentHTML('beforeend', `<div class="slots">${gs.map(() => '<div class="slot"></div>').join('')}</div><div class="tiles"></div><div class="center"><button class="secondary" data-act="undo">Undo</button></div>`);
+  const slots = el.querySelectorAll('.slot');
+  const tilesEl = el.querySelector('.tiles');
+  const btns = tiles.map(g => {
+    const b = document.createElement('button');
+    b.className = 'ltile' + (VOWELS.includes(g) ? ' vowel' : '') + (g.length > 1 ? ' wide' : '');
+    b.textContent = g;
+    b.addEventListener('click', () => {
+      if (got.length >= gs.length) return;
+      got.push({ g, b });
+      if (tiles.filter(x => x === g).length === 1 && !el.dataset.reuse) b.disabled = true;
+      slots[got.length - 1].textContent = g;
+      if (got.length === gs.length) {
+        btns.forEach(x => { x.disabled = true; });
+        el.querySelector('[data-act=undo]').disabled = true;
+        const ans = got.map(x => x.g).join('');
+        finish(ans === w, w, ans, ans === w ? `Yes! ${w}.` : `It is spelled ${w}.`);
+      }
+    });
+    tilesEl.appendChild(b);
+    return b;
+  });
+  el.querySelector('[data-act=undo]').addEventListener('click', () => {
+    const last = got.pop(); if (!last) return;
+    last.b.disabled = false; slots[got.length].textContent = '';
+  });
+}
+function pickTwoAndCheck(el, set, finish, prompt, label) {
+  const chosen = [];
+  el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword" style="font-size:1.5rem">${prompt}</div></div>`);
+  choiceButtons(el, shuffle(set).map(k => ({ k, html: picLabelled(k) })), (it, b, wrap) => {
+    if (chosen.includes(it.k)) return;
+    chosen.push(it.k); b.classList.add('sel');
+    if (chosen.length < 2) return;
+    lockChoices(wrap);
+    const ok = chosen.includes(set[0]) && chosen.includes(set[1]);
+    wrap.querySelectorAll('button').forEach(bb => { const k = bb.dataset.k; if (k === set[0] || k === set[1]) bb.classList.add('right'); else if (chosen.includes(k)) bb.classList.add('wrong'); });
+    finish(ok, set.join(' '), chosen.join(' '), ok ? `Yes! ${set[0]} and ${set[1]} ${label}.` : `${set[0]} and ${set[1]} ${label}.`);
+  });
+}
+const LOOKALIKE = { b: 'dpq', d: 'bpq', p: 'qbd', q: 'pdb', m: 'nwu', n: 'mhu', u: 'nvw', w: 'mvu', h: 'nkb', f: 'tlj', t: 'flj', i: 'jlt', j: 'igy', g: 'qyj', a: 'oed', e: 'cao', c: 'oea', o: 'ace', s: 'zcx', z: 'sxn', r: 'nvm', v: 'wyu', y: 'vgj', x: 'kzy', k: 'hxl', l: 'itj' };
+function heartLookalikes(w) {
+  const swaps = { a: 'eiou', e: 'aiou', i: 'aeou', o: 'aeiu', u: 'aeio', s: 'z', d: 'b', b: 'd', h: 'n', y: 'w', w: 'v', t: 'h', r: 'n' };
+  const out = new Set();
+  let guard = 0;
+  while (out.size < 2 && guard++ < 60) {
+    const i = Math.floor(Math.random() * w.length);
+    const nw = w.slice(0, i) + pick((swaps[w[i]] || 'aeiou').split('')) + w.slice(i + 1);
+    if (nw !== w) out.add(nw);
+  }
+  if (out.size < 2) out.add(w.split('').reverse().join(''));
+  return [...out].slice(0, 2);
+}
+
+/* How each game plays. Every item calls finish(correct, question, answer, message). */
+const ITEMS = {
+  rhyme(el, finish) { pickTwoAndCheck(el, pick(CONTENT.level0.rhymeSets), finish, 'Which two rhyme?', 'rhyme'); },
+  first(el, finish) { pickTwoAndCheck(el, pick(CONTENT.level0.firstSound), finish, 'Which two start the same?', 'start with the same sound'); },
+  syll(el, finish) {
+    const [k, n] = pick(CONTENT.level0.syllables);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${picLabelled(k)}</div></div>`);
+    const dots = c => '<span class="dots">' + '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#0369A1"/></svg>'.repeat(c) + '</span>';
+    choiceButtons(el, [1, 2, 3, 4].map(c => ({ c, html: `${c}${dots(c)}` })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.c === n ? 'right' : 'wrong');
+      const claps = `${n} ${n === 1 ? 'clap' : 'claps'}`;
+      finish(it.c === n, k, it.c, it.c === n ? `Yes! ${k} has ${claps}.` : `${k} has ${claps}.`);
+    });
+  },
+  letter(el, finish) {
+    const L = pick(Object.keys(LOOKALIKE));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="hugeletter">${L}</div></div>`);
+    choiceButtons(el, shuffle([L, ...LOOKALIKE[L].split('')]).map(x => ({ x, html: x })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.x === L ? 'right' : 'wrong');
+      finish(it.x === L, L, it.x, it.x === L ? 'Yes, the same!' : `Look again: ${L} matches ${L}.`);
+    }, 'letter');
+  },
+  case(el, finish) {
+    const L = pick('abdefghijklmnpqrty'.split(''));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="hugeletter">${L.toUpperCase()}</div></div>`);
+    choiceButtons(el, shuffle([L, ...shuffle(LOOKALIKE[L].split('')).slice(0, 3)]).map(x => ({ x, html: x })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.x === L ? 'right' : 'wrong');
+      finish(it.x === L, L.toUpperCase(), it.x, it.x === L ? `Yes! ${L.toUpperCase()} and ${L} go together.` : `${L.toUpperCase()} goes with ${L}.`);
+    }, 'letter');
+  },
+  pic2word(el, finish, L) {
+    const w = pick(picsFor(L));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    choiceButtons(el, shuffle([w, ...nearWords(w, wordsFor(L), 2)]).map(x => ({ x, html: esc(x) })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.x === w ? 'right' : 'wrong');
+      finish(it.x === w, w, it.x, it.x === w ? 'Yes!' : `It says ${w}.`);
+    });
+  },
+  build(el, finish, L) {
+    const w = pick(picsFor(L));
+    const gs = graphemes(w);
+    const pool = [...taughtSet(state.upTo)].filter(g => !gs.includes(g));
+    const levelGs = new Set(levelCards(L).flatMap(c => c.gs));
+    const extra = shuffle(pool.filter(g => levelGs.has(g))).slice(0, 2).concat(shuffle(pool.filter(g => !levelGs.has(g))).slice(0, 2));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    tileBoard(el.querySelector('.stage'), gs, shuffle([...gs, ...extra]), finish, w);
+  },
+  sort(el, finish, L) {
+    let cats, catOf;
+    if (L === 1) {
+      catOf = w => graphemes(w).find(g => VOWELS.includes(g));
+      cats = VOWELS.filter(v => wordsFor(1).some(w => catOf(w) === v));
+    } else {
+      const gs2 = cardsTaught(2).flatMap(c => c.gs);
+      catOf = w => { const hit = graphemes(w).filter(g => gs2.includes(g)); return hit.length === 1 ? hit[0] : null; };
+      cats = gs2.filter(g => wordsFor(2).some(w => catOf(w) === g));
+    }
+    const two = shuffle(cats).slice(0, 2);
+    const w = pick(wordsFor(L).filter(x => two.includes(catOf(x))));
+    const picOf = g => { const c = CARDS.find(cd => cd.gs.includes(g)); return c && (c.gs.length === 1 || c.anchor.includes(g)) ? svgPic(c.anchor) : ''; };
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div><div class="bins"></div>`);
+    const bins = el.querySelector('.bins');
+    two.forEach(v => {
+      const b = document.createElement('button');
+      b.className = 'bin';
+      b.innerHTML = `${picOf(v)}${v}`;
+      b.addEventListener('click', () => {
+        bins.querySelectorAll('button').forEach(x => { x.disabled = true; });
+        const ok = catOf(w) === v;
+        b.style.borderColor = ok ? 'var(--good)' : 'var(--bad)';
+        finish(ok, w, v, ok ? `Yes! ${w} has ${v}.` : `${w} has ${catOf(w)}.`);
+      });
+      bins.appendChild(b);
+    });
+  },
+  realfake(el, finish, L) {
+    const fakes = fakesFor(L);
+    const real = Math.random() < 0.5 || fakes.length === 0;
+    const w = real ? pick(wordsFor(L)) : pick(fakes);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div>`);
+    choiceButtons(el, [{ r: true, html: 'Real word' }, { r: false, html: 'Made up' }], (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.r === real ? 'right' : 'wrong');
+      finish(it.r === real, w, it.r ? 'real' : 'made up', it.r === real ? 'Yes!' : `${w} is ${real ? 'a real word' : 'a made-up word'}.`);
+    }, 'sentence');
+  },
+  readchoose(el, finish, L) {
+    const w = pick(picsFor(L));
+    const others = nearWords(w, wordsFor(L).filter(x => NOUNS.includes(x)), 2);
+    const s = x => `It is a ${x}.`;
+    const hearts = heartsUpTo(state.upTo);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    choiceButtons(el, shuffle([w, ...others]).map(x => ({ x, html: `<span>${markHearts(s(x), hearts)}</span>` })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.x === w ? 'right' : 'wrong');
+      finish(it.x === w, s(w), s(it.x), it.x === w ? 'Yes!' : `It is a ${w}.`);
+    }, 'sentence');
+  },
+  heart(el, finish, L) {
+    const h = pick(heartsFor(L));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword" style="padding-top:12px">${heartHTML(h.w, h)}</div><button class="action" data-act="ready">I know it. Hide it!</button></div>`);
+    el.querySelector('[data-act=ready]').addEventListener('click', () => {
+      el.querySelector('.stage').innerHTML = '<div class="bigword" style="font-size:1.5rem">Which one was it?</div>';
+      choiceButtons(el, shuffle([h.w, ...heartLookalikes(h.w)]).map(x => ({ x, html: esc(x) })), (it, b, wrap) => {
+        lockChoices(wrap); b.classList.add(it.x === h.w ? 'right' : 'wrong');
+        finish(it.x === h.w, h.w, it.x, it.x === h.w ? `Yes! ${h.w}.` : `It was ${h.w}.`);
+      });
+    });
+  },
+  drill(el, finish, L) {
+    const c = pick(cardsTaught(L));
+    const g = pick(c.gs);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="hugeletter">${g}</div></div><p class="muted center">Answer: ${esc(guide(c))}</p>`);
+    markButtons(el, ok => finish(ok, g, ok ? 'said it' : 'not yet', ok ? 'Well done!' : `Remember: ${guide(c)}`));
+  },
+  point(el, finish, L) {
+    const pool = cardsTaught(L).length >= 4 ? cardsTaught(L) : CARDS.slice(0, state.upTo + 1);
+    const c = pick(cardsTaught(L));
+    const g = pick(c.gs);
+    const others = shuffle(pool.filter(x => x !== c)).slice(0, 3).map(x => pick(x.gs));
+    el.insertAdjacentHTML('beforeend', `<div class="adult-note"><b>Say:</b> ${esc(c.gs.length > 1 ? `/${g[0]}/ spelled ${g}` : guide(c))}</div>`);
+    choiceButtons(el, shuffle([g, ...others]).map(x => ({ x, html: x })), (it, b, wrap) => {
+      lockChoices(wrap); b.classList.add(it.x === g ? 'right' : 'wrong');
+      finish(it.x === g, g, it.x, it.x === g ? 'Yes!' : `That sound is ${g}.`);
+    }, 'letter');
+  },
+  wordread(el, finish, L) {
+    const w = pick(wordsFor(L));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div>`);
+    markButtons(el, ok => finish(ok, w, ok ? 'read it' : 'not yet', ok ? 'Well done!' : `It says ${w}.`));
+  },
+  dict(el, finish, L) {
+    const w = pick(wordsFor(L));
+    const letters = [...taughtSet(state.upTo)];
+    el.insertAdjacentHTML('beforeend', `<div class="adult-note"><b>Say:</b> ${esc(w)}</div><div class="stage" data-reuse="1"></div>`);
+    tileBoard(el.querySelector('.stage'), graphemes(w), letters, finish, w);
+  },
+  heartflash(el, finish, L) {
+    const h = pick(heartsFor(L));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword" style="padding-top:12px">${heartHTML(h.w, h)}</div></div>`);
+    markButtons(el, ok => finish(ok, h.w, ok ? 'read it' : 'not yet', ok ? 'Well done!' : `It says ${h.w}.`));
+  },
+};
+
+// Can this game run with the sounds learned so far? Returns null if yes, or why not.
+function notReady(a) {
+  const L = a.level;
+  if (L === 0) return null;
+  if (!cardsTaught(L).length) return `Unlocks once a Level ${L} sound is learned.`;
+  const words = wordsFor(L).length, pics = picsFor(L).length;
+  if (['pic2word', 'build', 'readchoose'].includes(a.base) && pics < 2) return 'Unlocks after a few more sounds.';
+  if (a.base === 'readchoose' && !['t', 'i', 'n'].every(g => taughtSet(state.upTo).has(g))) return 'Unlocks after a few more sounds.';
+  if (['realfake', 'wordread', 'dict'].includes(a.base) && words < 4) return 'Unlocks after a few more sounds.';
+  if (a.base === 'sort') {
+    const tmp = document.createElement('div');
+    try { ITEMS.sort(tmp, () => {}, L); if (!tmp.querySelector('.bin + .bin')) return 'Unlocks after a few more sounds.'; } catch (e) { return 'Unlocks after a few more sounds.'; }
+  }
+  if (['heart', 'heartflash'].includes(a.base) && !heartsUpTo(state.upTo).some(h => h.w.length > 1)) return 'Unlocks after a few more sounds.';
+  return null;
+}
+function activityName(key) {
+  if (!key) return 'some work';
+  if (ACTS[key]) return `${ACTS[key].title} (Level ${ACTS[key].level})`;
+  if (key.startsWith('card_')) return `the ${(cardByKey(key.slice(5)) || { g: key.slice(5) }).g} sound card`;
+  if (key === 'l0_listen') return 'Listen Stories';
+  return key;
+}
+
+/* ---------------- rendering ---------------- */
+function renderGreet() {
+  const g = $('greet');
+  const p = state.profile;
+  if (!p) { g.innerHTML = ''; return; }
+  g.innerHTML = `<span class="chip">Hi, ${esc(p.name || p.username)}!</span>` +
+    (p.streak ? `<span class="chip streak">${p.streak} day streak</span>` : '') +
+    `<button class="modebtn ${state.mode === 'adult' ? 'on' : ''}" id="modeBtn">Adult helper: ${state.mode === 'adult' ? 'on' : 'off'}</button>` +
+    (window.ReadITAuth && ReadITAuth.isAdmin() ? '<a class="linkbtn" href="/admin.html">Admin</a>' : '') +
+    '<button class="linkbtn" id="outBtn">Sign out</button>';
+  $('modeBtn').onclick = () => { state.mode = state.mode === 'adult' ? 'learner' : 'adult'; store.set('readit_mode', state.mode); renderGreet(); render(); };
+  $('outBtn').onclick = () => ReadITAuth.logout();
+}
+function renderTabs() {
+  const t = $('tabs');
+  if (!state.profile || state.profile.status !== 'active') { t.innerHTML = ''; return; }
+  const v = state.view.name;
+  const onLevel = ['home', 'card', 'act', 'story'].includes(v);
+  t.innerHTML = CONTENT.levels.map(l => `<button class="tab ${l.ready ? '' : 'soon'} ${onLevel && state.level === l.n ? 'active' : ''}" data-level="${l.n}">Level ${l.n}</button>`).join('') +
+    `<button class="tab ${v === 'garden' ? 'active' : ''}" data-view="garden"><img src="${PATCH_IMG}" alt="" />My Garden in Bloom</button>` +
+    `<button class="tab ${v === 'hearts' ? 'active' : ''}" data-view="hearts">Heart Words</button>`;
+  t.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => go({ name: 'home' }, +b.dataset.level)));
+  t.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => go({ name: b.dataset.view })));
+}
+function go(view, level) {
+  if (typeof level === 'number') { state.level = level; store.set('readit_level', String(level)); }
+  state.view = view;
+  render();
+  window.scrollTo(0, 0);
+}
+function render() {
+  renderTabs();
+  const app = $('app');
+  const v = state.view;
+  if (!state.profile) return;
+  if (v.name === 'home') return renderHome(app);
+  if (v.name === 'card') return renderCard(app, v.key);
+  if (v.name === 'act') return renderActivity(app, v.key);
+  if (v.name === 'story') return renderL0Story(app, v.i);
+  if (v.name === 'garden') return renderGarden(app);
+  if (v.name === 'hearts') return renderHearts(app);
+  if (v.name === 'stickers') return renderGarden(app);
+}
+function tileHTML(a, badge) {
+  return `<button class="tile ${a.color || 'c-ocean'}" data-key="${a.key}"><span class="ico">${svgPic(a.pic)}</span><span><h3>${esc(a.title)}</h3><p>${esc(a.desc || '')}</p>${badge ? `<span class="badge">${esc(badge)}</span>` : ''}</span></button>`;
+}
+function lockedTileHTML(a, why) {
+  return `<div class="tile ${a.color}" style="opacity:.55;cursor:default"><span class="ico">${svgPic(a.pic)}</span><span><h3>${esc(a.title)}</h3><p>${esc(why)}</p></span></div>`;
+}
+function tasksHTML() {
+  if (!state.tasks.length) return '';
+  return `<div class="card" style="border-left:4px solid var(--coral)"><div class="section-heading" style="margin-top:0">Set for you by your therapist</div>` +
+    state.tasks.map(t => `<button class="task-item" data-task="${esc(t.topic)}" data-level="${esc(t.level || '')}"><b>${esc(activityName(t.topic))}</b>${t.note ? `<span class="muted">${esc(t.note)}</span>` : ''}<span class="go">Start</span></button>`).join('') + '</div>';
+}
+function wireTasks(app) {
+  app.querySelectorAll('[data-task]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.task;
+    if (k.startsWith('card_')) { const c = cardByKey(k.slice(5)); if (c) return go({ name: 'card', key: c.key }, c.level); }
+    if (k === 'l0_listen') return go({ name: 'home' }, 0);
+    if (ACTS[k]) return go({ name: 'act', key: k }, ACTS[k].level);
+    go({ name: 'home' }, b.dataset.level ? +b.dataset.level : state.level);
+  }));
+}
+const upperOf = c => (c.level > 1 && c.pos === 'end' ? '' : c.g === 'qu' ? 'Qu' : c.g[0].toUpperCase() + c.g.slice(1));
+
+function gardenTileHTML() {
+  const flowers = gardenKeys().filter(k => {
+    const c = k.startsWith('card_') ? cardByKey(k.slice(5)) : null;
+    const total = c ? c.listen.qs.length + (c.read ? c.read.qs.length : 0) : (k === 'l0_listen' ? 6 : 10);
+    return growth(k, total) === 3;
+  }).length;
+  return `<button class="card bloom-tile" data-view-go="garden"><img src="${PATCH_IMG}" alt="" /><span><h3>My Garden in Bloom</h3><span class="muted">${flowers ? `${flowers} ${flowers === 1 ? 'flower has' : 'flowers have'} bloomed so far. Tap to see your garden.` : 'Every sound card is a seed. Tap to see your garden grow.'}</span></span></button>`;
+}
+function renderHome(app) {
+  const L = CONTENT.levels[state.level];
+  let h = tasksHTML();
+  h += gardenTileHTML();
+  h += `<div class="card has-mascot">${mascotImg('mascot-corner')}<h2 class="title">Level ${L.n}: ${esc(L.title)}</h2><span class="pill sand">${esc(L.grade)} (approximate guide)</span>`;
+  if (!L.ready) {
+    app.innerHTML = h + '<p class="subtext">This level is not built yet. It is coming in a later update.</p></div>';
+    wireTasks(app); app.querySelectorAll('[data-view-go]').forEach(b => b.addEventListener('click', () => go({ name: b.dataset.viewGo }))); return;
+  }
+  if (state.level === 0) {
+    h += '<p class="subtext">Listening games for hearing rhyme, syllables and first sounds, and for knowing letter shapes. No reading needed.</p></div>';
+    h += '<div class="section-heading">Games</div><div class="grid">' +
+      Object.values(ACTS).filter(a => a.level === 0).map(a => tileHTML(a, done(a.key) ? 'Practised' : '')).join('') + '</div>';
+    h += '<div class="section-heading">Listen stories <small>Your helper reads these aloud</small></div><div class="grid">' +
+      CONTENT.level0.listen.map((s, i) => `<button class="tile c-aqua" data-story="${i}"><span class="ico">${svgPic(i ? 'umbrella' : 'rabbit')}</span><span><h3>${esc(s.title)}</h3><p>Listen, then answer.</p>${done('l0_listen') ? '<span class="badge">Practised</span>' : ''}</span></button>`).join('') + '</div>';
+    app.innerHTML = h;
+  } else {
+    const lv = state.level;
+    const opts = [1, 2].map(n => `<optgroup label="Level ${n}">` + CARDS.map((c, i) => c.level === n ? `<option value="${i}" ${i === state.upTo ? 'selected' : ''}>${esc(c.g)}</option>` : '').join('') + '</optgroup>').join('');
+    const intro = lv === 1 ? 'One sound at a time. Each sound card has an anchor word, a rhyme, stories and questions.'
+      : 'Two letters, one sound. sh, ch, th, wh, ck, ng and nk are each one sound, and short words double ff, ll, ss and zz at the end.';
+    h += `<p class="subtext">${intro}</p>
+      <div class="range-row"><label for="upto"><b>Sounds learned so far, up to:</b></label><select id="upto">${opts}</select></div>
+      <p class="muted" style="margin:6px 0 0">Practice games only use words made from these sounds.</p></div>`;
+    h += '<div class="section-heading">Sound cards</div>';
+    const cs = levelCards(lv);
+    [...new Set(cs.map(c => c.group))].forEach(gp => {
+      const grp = cs.filter(c => c.group === gp);
+      h += `<div class="muted" style="margin:10px 2px 6px">Group ${gp}: ${grp.map(c => esc(c.g)).join(', ')}</div><div class="sound-grid">` +
+        grp.map(c => `<button class="sound-tile ${cardIndex(c.key) > state.upTo ? 'out' : ''}" data-card="${c.key}">${done('card_' + c.key) ? STAR_SVG : ''}<div class="g ${c.g.length > 3 ? 'long' : ''}">${esc(c.g)}</div>${svgPic(c.anchor)}<div class="w">${esc(anchorLabel(c))}</div></button>`).join('') + '</div>';
+    });
+    const games = Object.values(ACTS).filter(a => a.level === lv);
+    const tiles = list => list.map(a => { const why = notReady(a); return why ? lockedTileHTML(a, why) : tileHTML(a, done(a.key) ? 'Practised' : ''); }).join('');
+    h += `<div class="section-heading">Practice games</div><div class="grid">${tiles(games.filter(a => !a.adultOnly))}</div>`;
+    h += '<div class="section-heading">With your helper <small>For the therapist or parent to run</small></div>';
+    h += state.mode === 'adult' ? `<div class="grid">${tiles(games.filter(a => a.adultOnly))}</div>`
+      : '<div class="card"><p class="subtext" style="margin:0">Turn on <b>Adult helper</b> at the top to see the drills, word reading and dictation.</p></div>';
+    app.innerHTML = h;
+    $('upto').addEventListener('change', e => { state.upTo = +e.target.value; store.set(uptoKey(), String(state.upTo)); render(); });
+  }
+  app.querySelectorAll('[data-key]').forEach(b => b.addEventListener('click', () => go({ name: 'act', key: b.dataset.key })));
+  app.querySelectorAll('[data-card]').forEach(b => b.addEventListener('click', () => go({ name: 'card', key: b.dataset.card })));
+  app.querySelectorAll('[data-story]').forEach(b => b.addEventListener('click', () => go({ name: 'story', i: +b.dataset.story })));
+  wireTasks(app);
+  app.querySelectorAll('[data-view-go]').forEach(b => b.addEventListener('click', () => go({ name: b.dataset.viewGo })));
+}
+const uptoKey = () => 'readit_upto_' + (state.profile ? state.profile.username : '');
+const backHTML = label => `<button class="backbtn" id="back">${BACK}${esc(label || 'Back')}</button>`;
+
+/* Questions: the correct answer is listed first in the content and shown
+   shuffled. The first try on each question is what gets recorded. */
+function questionsHTML(qs, id) {
+  return qs.map((q, qi) => `<div class="q" data-q="${id}-${qi}"><div class="qt">${qi + 1}. ${esc(q.q)}${q.think ? '<span class="think">Think</span>' : ''}</div><div class="opts">` +
+    shuffle(q.o.map((o, oi) => ({ o, oi }))).map(x => `<button class="opt" data-oi="${x.oi}">${esc(x.o)}</button>`).join('') + '</div><div class="feedback"></div></div>').join('');
+}
+function wireQuestions(root, qs, id, topic, level, onAllDone) {
+  const answered = new Set();
+  qs.forEach((q, qi) => {
+    const box = root.querySelector(`[data-q="${id}-${qi}"]`);
+    let tried = false;
+    box.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+      const ok = b.dataset.oi === '0';
+      const fb = box.querySelector('.feedback');
+      if (!tried) { tried = true; record(topic, level, q.q, q.o[+b.dataset.oi], ok); }
+      if (ok) {
+        b.classList.add('right');
+        box.querySelectorAll('.opt').forEach(x => { x.disabled = true; });
+        fb.className = 'feedback good'; fb.textContent = pick(['Yes!', 'Well done!', 'That is right!', 'Great thinking!']);
+        answered.add(qi);
+        if (answered.size === qs.length && onAllDone) onAllDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true;
+        fb.className = 'feedback bad'; fb.textContent = 'Not quite. Look back at the story and try again.';
+      }
+    }));
+  });
+}
+
+function anchorHTML(c) {
+  const word = anchorLabel(c);
+  const g = c.gs.find(x => word.includes(x)) || c.g;
+  const at = c.pos === 'end' ? word.lastIndexOf(g) : word.indexOf(g);
+  if (at < 0) return esc(word);
+  return esc(word.slice(0, at)) + `<b>${esc(g)}</b>` + esc(word.slice(at + g.length));
+}
+function renderCard(app, key) {
+  const i = cardIndex(key);
+  const c = CARDS[i];
+  const hearts = heartsUpTo(i);
+  const newHearts = CONTENT.heartWords.filter(h => h.after === c.key);
+  const words = POOLS[c.level].words.filter(w => canRead(w, i) && graphemes(w).some(g => c.gs.includes(g))).slice(0, 16);
+  const up = upperOf(c);
+  let h = backHTML(`Level ${c.level} sound cards`);
+  h += `<div class="card"><div class="sc-top"><div class="sc-letter ${c.g.length > 3 ? 'long' : ''}"><div class="lo">${esc(c.g)}</div><div class="up">${esc(up || (c.pos === 'end' ? 'at the end' : ''))}</div></div>
+    <div class="sc-pic">${svgPic(c.anchor)}<div class="word">${anchorHTML(c)}</div></div></div>
+    ${state.mode === 'adult' ? `<div class="adult-note" style="margin-top:14px"><b>Sound:</b> ${esc(guide(c))} Say the sound, not the letter names. The learner traces the letters while saying the sound.</div>` : ''}</div>`;
+  h += `<div class="card"><div class="section-heading" style="margin-top:0">Rhyme <small>Say it together</small></div><div class="rhyme">${esc(c.rhyme)}</div></div>`;
+  if (newHearts.length) {
+    h += '<div class="card"><div class="section-heading" style="margin-top:0">New heart words <small>Learn the heart part by heart</small></div><div class="heart-grid">' +
+      newHearts.map(hw => `<div class="heart-card">${heartHTML(hw.w, hw)}</div>`).join('') + '</div></div>';
+  }
+  if (c.read) {
+    h += `<div class="card" id="readCard"><div class="section-heading" style="margin-top:0">Read it myself</div>
+      <div class="story-title">${esc(c.read.title)}</div><div class="story decodable">${markHearts(c.read.text, hearts)}</div>
+      ${state.mode === 'adult' ? '<div class="adult-note" style="margin-top:12px">Every word uses sounds already taught. Red words with a heart are heart words. Let the learner read the questions if they can; otherwise read them aloud.</div>' : ''}
+      ${questionsHTML(c.read.qs, 'r')}<div id="readDone"></div></div>`;
+  }
+  h += `<div class="card" id="listenCard"><div class="section-heading" style="margin-top:0">Listen story <small>Your helper reads this aloud</small></div>
+    <div class="story-title">${esc(c.listen.title)}</div><div class="story">${esc(c.listen.text)}</div>
+    ${questionsHTML(c.listen.qs, 'l')}<div id="listenDone"></div></div>`;
+  if (words.length) h += `<div class="card"><div class="section-heading" style="margin-top:0">Words to read with ${esc(c.g)}</div><div class="done-list">${words.map(w => `<span class="wchip">${esc(w)}</span>`).join('')}</div></div>`;
+  const prev = CARDS[i - 1], nxt = CARDS[i + 1];
+  h += `<div class="center">${prev ? `<button class="secondary" data-go="${prev.key}">Back to ${esc(prev.g)}</button>` : ''}${nxt ? `<button class="action" data-go="${nxt.key}">Next sound: ${esc(nxt.g)}</button>` : ''}</div>`;
+  app.innerHTML = h;
+  $('back').onclick = () => go({ name: 'home' }, c.level);
+  app.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { const n = cardByKey(b.dataset.go); go({ name: 'card', key: n.key }, n.level); }));
+  const topic = 'card_' + c.key;
+  const total = c.listen.qs.length + (c.read ? c.read.qs.length : 0);
+  const finished = el => () => { setTimeout(() => announceVisitors(topic), 300); const st = growth(topic, total); $(el).innerHTML = `<div class="feedback good" style="display:flex;gap:10px;align-items:center">${st === 3 ? bloomHTML(gardenIndex(topic), '').replace('class="bloom', 'style="position:relative;display:inline-block;width:48px;height:48px;left:auto;transform:none" class="bloom') : plotSVG(st, i).replace('<svg', '<svg width="44" height="48"')} All questions answered. Your ${esc(c.g)} ${st === 3 ? FINISH_NAME[finishOf(gardenIndex(topic))] + ' is in bloom' : STAGE_WORD[st] + ' is growing'} in My Garden in Bloom!</div>`; };
+  if (c.read) wireQuestions($('readCard'), c.read.qs, 'r', topic, c.level, finished('readDone'));
+  wireQuestions($('listenCard'), c.listen.qs, 'l', topic, c.level, finished('listenDone'));
+}
+
+function renderL0Story(app, i) {
+  const s = CONTENT.level0.listen[i];
+  app.innerHTML = backHTML('Level 0') + `<div class="card" id="st"><div class="section-heading" style="margin-top:0">Listen story <small>Your helper reads this aloud</small></div>
+    <div class="story-title">${esc(s.title)}</div><div class="story">${esc(s.text)}</div>${questionsHTML(s.qs, 's')}<div id="stDone"></div></div>`;
+  $('back').onclick = () => go({ name: 'home' }, 0);
+  wireQuestions($('st'), s.qs, 's', 'l0_listen', 0, () => { $('stDone').innerHTML = '<div class="feedback good">All questions answered. Well done!</div>'; });
+}
+
+function renderActivity(app, key) {
+  const a = ACTS[key];
+  const ROUND = 10;
+  let n = 0, right = 0;
+  const name = state.profile ? (state.profile.name || state.profile.username) : 'Your';
+  app.innerHTML = backHTML(`Level ${a.level}`) + `<div class="card"><h2 class="title">${esc(a.title)}</h2><p class="subtext">${esc(a.desc)}</p>
+    ${a.adult && state.mode === 'adult' ? `<div class="adult-note"><b>Helper tip:</b> ${esc(a.adult)}</div>` : ''}
+    <span class="score" id="score"></span><div id="item"></div><div class="feedback" id="fb"></div><div id="nextRow"></div></div>`;
+  $('back').onclick = () => go({ name: 'home' }, a.level);
+  const why = notReady(a);
+  if (why) { $('item').innerHTML = `<p class="subtext">${esc(why)} Change "Sounds learned so far" on the Level ${a.level} page.</p>`; return; }
+  const score = () => { $('score').textContent = `${name}'s score: ${right} of ${n}`; };
+  const next = () => {
+    const el = $('item');
+    el.innerHTML = ''; $('fb').className = 'feedback'; $('nextRow').innerHTML = '';
+    if (n >= ROUND) {
+      el.innerHTML = `<div class="stage">${mascotImg('mascot small')}<div class="bigword" style="font-size:2rem">${right} out of ${n}!</div><p>${right >= 8 ? 'Brilliant work!' : right >= 5 ? 'Good work. Keep practising!' : 'Good try. Practise a bit more with your helper.'}</p></div>`;
+      $('nextRow').innerHTML = '<div class="center"><button class="action" id="again">Play again</button></div>';
+      $('again').onclick = () => { n = 0; right = 0; score(); next(); };
+      return;
+    }
+    ITEMS[a.base](el, (ok, q, ans, msg) => {
+      n++; if (ok) right++;
+      score();
+      const fb = $('fb'); fb.className = 'feedback ' + (ok ? 'good' : 'bad'); fb.textContent = msg;
+      record(a.key, a.level, q, ans, ok);
+      $('nextRow').innerHTML = '<div class="center"><button class="action" id="nextBtn">Next</button></div>';
+      $('nextBtn').onclick = next;
+      $('nextBtn').focus();
+    }, a.level);
+  };
+  score(); next();
+}
+
+/* ---------------- my garden ----------------
+   Every sound card is a seed in the learner's garden. It sprouts when they
+   start the card, makes a bud at half the questions right, and flowers at
+   three quarters. Level 0 games grow the same way. */
+const PETALS = ['#FB7185', '#FBBF24', '#C084FC', '#F9A8D4', '#7DD3FC', '#FB923C', '#F472B6', '#A78BFA'];
+function growth(key, total) {
+  const p = state.progress[key];
+  if (!p || !p.attempted) return 0;
+  if (p.correct >= Math.ceil(total * 0.75)) return 3;
+  if (p.correct >= Math.ceil(total / 2)) return 2;
+  return 1;
+}
+function plotSVG(stage, i) {
+  const col = PETALS[i % PETALS.length];
+  const soil = '<ellipse cx="50" cy="96" rx="40" ry="12" fill="#6B4A2E"/><ellipse cx="50" cy="93" rx="34" ry="8" fill="#8B5E3C"/>';
+  const ink = 'stroke="#3A3A3A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
+  let plant = '';
+  if (stage === 0) plant = `<ellipse cx="50" cy="90" rx="5" ry="3.5" fill="#E9D3A8" ${ink}/>`;
+  if (stage >= 1) plant += `<path d="M50 92 L50 ${stage === 1 ? 70 : stage === 2 ? 52 : 44}" fill="none" ${ink} stroke="#3BA55D"/>`;
+  if (stage === 1) plant += `<path d="M50 74 C40 62 30 66 32 72 C36 78 46 76 50 74 Z M50 72 C60 58 70 62 68 68 C64 74 54 74 50 72 Z" fill="#86EFAC" ${ink}/>`;
+  if (stage >= 2) plant += `<path d="M50 80 C38 70 28 74 30 80 C34 86 44 84 50 80 Z M50 76 C62 66 72 70 70 76 C66 82 56 80 50 76 Z" fill="#86EFAC" ${ink}/>`;
+  if (stage === 2) plant += `<path d="M50 52 C40 44 42 30 50 26 C58 30 60 44 50 52 Z" fill="${col}" ${ink}/>`;
+  if (stage === 3 && isTall(i)) plant = '';
+  return `<svg viewBox="0 0 100 110" aria-hidden="true">${soil}${plant}</svg>`;
+}
+/* Flowers in full bloom are Debby's flower pictures, each with a finish.
+   Plants are numbered across the whole garden, so a sound card always grows
+   the same flower with the same finish. */
+const FINISHES = ['plain', 'glitter', 'plain', 'holo', 'plain', 'gold', 'plain', 'glow'];
+const FINISH_NAME = { plain: 'flower', glitter: 'glitter flower', holo: 'holographic flower', gold: 'golden flower', glow: 'glow in the dark flower' };
+const metaOf = i => FLOWER_META[i % FLOWER_META.length] || {};
+const isTall = i => Boolean(metaOf(i).tall);
+// A picture that already glows, glitters or shines keeps its own look; the rest get a finish.
+const finishOf = i => metaOf(i).native || FINISHES[i % FINISHES.length];
+function bloomHTML(i, extraCls) {
+  const n = i % FLOWER_IMGS.length, src = FLOWER_IMGS[n];
+  return `<span class="bloom fx-${finishOf(i)} ${metaOf(i).native ? 'fx-native' : ''} ${isTall(i) ? 'tall' : ''} ${extraCls || ''}" style="--img:url('${src}')"><img src="${src}" alt="" /></span>`;
+}
+// An example plant for the key: one whose own picture has that finish, if there is one.
+function legendSample(f) {
+  const n = FLOWER_IMGS.length;
+  for (let i = 0; i < n; i++) if (f !== 'plain' && metaOf(i).native === f && metaOf(i).legend) return i;
+  for (let i = 0; i < n; i++) if (f !== 'plain' && metaOf(i).native === f) return i;
+  for (let i = 0; i < n; i++) if (finishOf(i) === f) return i;
+  return 0;
+}
+function plotHTML(stage, i) {
+  return `<span class="plotbox">${plotSVG(stage, i)}${stage === 3 && FLOWER_IMGS.length ? bloomHTML(i) : ''}</span>`;
+}
+const STAGE_WORD = ['seed', 'sprout', 'bud', 'flower'];
+function gardenKeys() {
+  return [...Object.values(ACTS).filter(a => a.level === 0).map(a => a.key), 'l0_listen', ...CARDS.map(c => 'card_' + c.key)];
+}
+const gardenIndex = key => Math.max(0, gardenKeys().indexOf(key));
+/* The garden as data: beds (one per level), each split into groups of plots.
+   Finishing every plot in a group brings an insect to visit; finishing a whole
+   level brings a pet to live in the garden. */
+function gardenModel() {
+  const beds = [];
+  const l0 = Object.values(ACTS).filter(a => a.level === 0).map(a => ({ key: a.key, label: a.title.split(' ')[0], total: 10, go: () => go({ name: 'act', key: a.key }, 0) }));
+  l0.push({ key: 'l0_listen', label: 'Stories', total: 6, go: () => go({ name: 'home' }, 0) });
+  beds.push({ level: 0, title: 'Level 0: sound games', groups: [{ label: 'the sound games', plots: l0 }] });
+  [1, 2].forEach(L => {
+    const cs = levelCards(L);
+    beds.push({
+      level: L, title: `Level ${L}: ${CONTENT.levels[L].title.toLowerCase()}`,
+      groups: [...new Set(cs.map(c => c.group))].map(gp => ({
+        label: cs.filter(c => c.group === gp).map(c => c.g).join(', '),
+        plots: cs.filter(c => c.group === gp).map(c => ({ key: 'card_' + c.key, label: c.g, total: c.listen.qs.length + (c.read ? c.read.qs.length : 0), go: () => go({ name: 'card', key: c.key }, L) })),
+      })),
+    });
+  });
+  let gi = 0;
+  beds.forEach((b, bi) => {
+    b.groups.forEach(g => {
+      g.plots.forEach(pl => { pl.stage = growth(pl.key, pl.total); pl.i = gardenIndex(pl.key); });
+      g.done = g.plots.every(pl => pl.stage === 3);
+      g.insect = CRITTERS.insects[gi % CRITTERS.insects.length]; gi++;
+    });
+    b.plots = b.groups.flatMap(g => g.plots);
+    b.done = b.groups.every(g => g.done);
+    b.pet = CRITTERS.pets[bi % CRITTERS.pets.length];
+  });
+  return beds;
+}
+const withArticle = w => (/^[aeiou]/.test(w) ? 'an ' : 'a ') + w;
+function critterHTML(c, earned, cls, label) {
+  return `<span class="critter ${cls} ${earned ? 'earned' : 'locked'}" title="${esc(earned ? c.name : 'Who will come?')}"><img src="${c.src}" alt="${esc(earned ? c.name : '')}" /><span class="clabel">${esc(label)}</span></span>`;
+}
+function renderGarden(app) {
+  const beds = gardenModel();
+  const plots = beds.flatMap(b => b.plots);
+  const n = plots.length, flowers = plots.filter(pl => pl.stage === 3).length;
+  const insects = beds.flatMap(b => b.groups).filter(g => g.done).length;
+  const pets = beds.filter(b => b.done).length;
+  const name = state.profile ? (state.profile.name || state.profile.username) : '';
+  const say = flowers === 0 ? `Hello ${esc(name)}! Every sound card is a seed. Answer its questions to help it grow into a flower.`
+    : flowers === n ? `Wow, ${esc(name)}! Your whole garden is in flower!`
+    : `${esc(name)}, you have grown ${flowers} ${flowers === 1 ? 'flower' : 'flowers'}! Keep going to fill your garden.`;
+  const special = plots.filter(pl => pl.stage === 3 && finishOf(pl.i) !== 'plain').length;
+  const extra = [special ? `${special} of your flowers ${special === 1 ? 'is' : 'are'} extra special!` : '',
+    insects ? `${insects} ${insects === 1 ? 'bug has' : 'bugs have'} come to visit` + (pets ? ` and ${pets} ${pets === 1 ? 'pet lives' : 'pets live'} in your garden.` : '.') : ''].filter(Boolean).join(' ');
+  let h = `<div class="card patch-banner"><img src="${PATCH_IMG}" alt="" /><h2>My Garden in Bloom</h2></div>`;
+  h += `<div class="card"><div class="garden-intro">${mascotImg()}<div class="bubble">${say} ${extra}</div></div></div>`;
+  h += `<div class="card"><div class="legend">${[0, 1, 2].map(st => `<span>${plotSVG(st, 0).replace('<svg', '<svg width="40" height="44"')} ${STAGE_WORD[st]}</span>`).join('')}</div>
+    <p class="muted" style="margin:8px 0 0">A seed sprouts when you start, makes a bud when half the questions are right, and flowers when most are right. Some flowers grow extra special.</p>
+    <div class="finish-legend">${['plain', 'glitter', 'holo', 'gold', 'glow'].map(f => `<span>${bloomHTML(legendSample(f))} ${{ plain: 'flower', glitter: 'glitter', holo: 'holographic', gold: 'golden', glow: 'glow in the dark' }[f]}</span>`).join('')}</div>
+    <p class="muted" style="margin:10px 0 0">When every flower in a group blooms, a bug comes to visit. When a whole level blooms, a pet moves in.</p>
+    <button class="secondary small" id="lights" style="margin-top:12px">Turn the lights off</button></div>`;
+  beds.forEach((b, bi) => {
+    h += `<div class="section-heading">${esc(b.title)}</div>`;
+    h += `<div class="visitors">${b.groups.map(g => critterHTML(g.insect, g.done, 'insect', g.done ? `${g.insect.name} for ${g.label}` : `finish ${g.label}`)).join('')}</div>`;
+    h += '<div class="bed">' + b.plots.map(pl => `<button class="plot" data-key="${pl.key}" title="${esc(pl.label)}: ${pl.stage === 3 ? FINISH_NAME[finishOf(pl.i)] : STAGE_WORD[pl.stage]}">${plotHTML(pl.stage, pl.i)}<span class="tag">${esc(pl.label)}</span></button>`).join('') + '</div>';
+  });
+  h += '<p class="muted" style="margin-top:14px">New garden beds appear as new levels are added.</p>';
+  h += `<div class="section-heading">Pets in my garden <small>A pet moves in when a whole level is in bloom</small></div>
+    <div class="pet-yard">${beds.map(b => critterHTML(b.pet, b.done, 'pet', b.done ? `${b.pet.name} (Level ${b.level})` : `finish Level ${b.level}`)).join('')}</div>`;
+  if (state.stickers.length) {
+    h += '<div class="section-heading">Garden prizes <small>For finishing work your therapist set and for practising lots of days in a row</small></div><div class="sticker-book">' +
+      state.stickers.map(st => `<div class="sticker">${stickerArt(st)}<div>${esc(stickerReason(st))}</div></div>`).join('') + '</div>';
+  }
+  app.innerHTML = `<div id="gardenWrap">${h}</div>`;
+  const byKey = Object.fromEntries(plots.map(pl => [pl.key, pl]));
+  app.querySelectorAll('.plot').forEach(b => b.addEventListener('click', () => byKey[b.dataset.key].go()));
+  $('lights').onclick = () => { const w = $('gardenWrap'); const night = w.classList.toggle('garden-night'); $('lights').textContent = night ? 'Turn the lights on' : 'Turn the lights off'; };
+}
+
+/* Called when a card's questions are all answered: a bug or a pet may have
+   just arrived, and that deserves a moment. */
+function announceVisitors(key) {
+  const beds = gardenModel();
+  const bed = beds.find(b => b.plots.some(pl => pl.key === key));
+  if (!bed) return;
+  const group = bed.groups.find(g => g.plots.some(pl => pl.key === key));
+  if (bed.done) toastCritter(bed.pet, `${withArticle(bed.pet.name)} moved into your garden!`, `for finishing Level ${bed.level}`);
+  else if (group && group.done) toastCritter(group.insect, `${withArticle(group.insect.name)} came to visit your garden!`, `for finishing ${group.label}`);
+}
+function toastCritter(c, title, why) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<img src="${c.src}" alt="" style="width:64px;height:64px;object-fit:contain" /><div><b>${esc(title.charAt(0).toUpperCase() + title.slice(1))}</b><br><span class="muted">${esc(why)}</span></div>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4800);
+}
+
+function renderHearts(app) {
+  const byLevel = {};
+  CONTENT.heartWords.forEach(h => { (byLevel[h.level] = byLevel[h.level] || []).push(h); });
+  let h = `<div class="card"><h2 class="title">Heart Words</h2><p class="subtext">These words do not follow the rules yet, so we learn part of them by heart. The heart sits over the tricky part. The rest of the word is sounded out as normal.</p>
+    ${state.mode === 'adult' ? '<div class="adult-note"><b>How to teach one:</b> read the word, say each sound, find the part that does not sound the way it looks and put the heart there, spell it aloud, then write it while saying each letter.</div>' : ''}</div>`;
+  Object.keys(byLevel).forEach(lv => {
+    h += `<div class="section-heading">Level ${lv}</div><div class="heart-grid">` +
+      byLevel[lv].map(x => `<div class="heart-card">${heartHTML(x.w, x)}<small>learned with ${esc(cardByKey(x.after).g)}</small></div>`).join('') + '</div>';
+  });
+  h += '<p class="muted" style="margin-top:16px">Heart words for later levels will appear here as those levels are built.</p>';
+  app.innerHTML = h;
+}
+
+
+/* ---------------- start-up ---------------- */
+function showMessage(html) { $('app').innerHTML = `<div class="card welcome">${mascotImg()}${html}</div>`; }
+async function loadExtras() {
+  try {
+    const p = await ReadITAuth.progress();
+    (p.topics || []).forEach(t => { const cur = state.progress[t.topic] || { correct: 0, attempted: 0 }; cur.correct += t.correct; cur.attempted += t.attempted; state.progress[t.topic] = cur; });
+  } catch (e) { console.warn('progress:', e.message); }
+  try { state.tasks = (await ReadITAuth.api('/me/tasks')).tasks || []; } catch (e) { console.warn('tasks:', e.message); }
+  try { state.stickers = (await ReadITAuth.api('/me/stickers')).stickers || []; } catch (e) { console.warn('stickers:', e.message); }
+}
+async function start() {
+  state.mode = store.get('readit_mode') === 'adult' ? 'adult' : 'learner';
+  const lv = parseInt(store.get('readit_level'), 10);
+  if (lv >= 0 && lv < CONTENT.levels.length) state.level = lv;
+  let me;
+  try { me = await ReadITAuth.init(); }
+  catch (e) {
+    showMessage(`<h2 class="title">Cannot reach ${APP_NAME}</h2><p class="subtext">${esc(e.message)}. Please check your internet connection and try again.</p>`);
+    return;
+  }
+  if (!me) {
+    showMessage(`<h2 class="title">Welcome to ${APP_NAME}!</h2><p class="subtext">Sign in to pick up your reading practice where you left off.</p>
+      <button class="action" id="inBtn">Sign in</button><button class="secondary" id="regBtn">Create an account</button>
+      <p class="muted" style="margin-top:14px">New accounts are checked by the practice before they are switched on.</p>`);
+    $('inBtn').onclick = () => ReadITAuth.login();
+    $('regBtn').onclick = () => ReadITAuth.register();
+    return;
+  }
+  state.profile = me;
+  renderGreet();
+  if (me.status === 'pending') { showMessage('<h2 class="title">Almost there!</h2><p class="subtext">Your account is waiting for the practice to switch it on. Please check back soon.</p>'); return; }
+  if (me.status === 'disabled') { showMessage('<h2 class="title">Account switched off</h2><p class="subtext">This account has been switched off. Please contact the practice.</p>'); return; }
+  const saved = parseInt(store.get(uptoKey()), 10);
+  if (saved >= 0 && saved < CARDS.length) state.upTo = saved;
+  await loadExtras();
+  render();
+}
+start();
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "sage-reads",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sage Reads: NILD and Orton-Gillingham phonics practice app plus one Netlify function for the API.",
+  "scripts": {
+    "build": "node scripts/check-content.mjs && node scripts/build-site.mjs",
+    "check": "node scripts/check-content.mjs",
+    "migrate": "node scripts/migrate.mjs",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "@netlify/database": "^2.0.1",
+    "@netlify/identity": "^2.0.0",
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
