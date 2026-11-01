@@ -89,6 +89,20 @@ for (const kind of ['insects', 'pets']) {
   for (const c of crit[kind]) c.src = 'data:image/webp;base64,' + (await readFile('assets/critters/' + c.file)).toString('base64');
 }
 app = swap(app, '/*@@CRITTERS@@*/{ insects: [], pets: [] }', JSON.stringify(crit));
+const anchors = {};
+for (const f of (await readdir('assets/anchors')).filter(f => f.endsWith('.webp'))) {
+  anchors[f.replace(/\.webp$/, '')] = 'data:image/webp;base64,' + (await readFile('assets/anchors/' + f)).toString('base64');
+}
+app = swap(app, '/*@@ANCHORS@@*/{}', JSON.stringify(anchors));
+// Debby's pictures for the game words. The folder may be empty or missing.
+const pictures = {};
+const { existsSync } = await import('node:fs');
+if (existsSync('assets/pictures')) {
+  for (const f of (await readdir('assets/pictures')).filter(f => f.endsWith('.webp'))) {
+    pictures[f.replace(/\.webp$/, '')] = 'data:image/webp;base64,' + (await readFile('assets/pictures/' + f)).toString('base64');
+  }
+}
+app = swap(app, '/*@@PICTURES@@*/{}', JSON.stringify(pictures));
 app = swap(app, '@@PATCH@@', 'data:image/webp;base64,' + (await readFile('assets/garden_patch.webp')).toString('base64'));
 app = swap(app, '@@APP_NAME@@', APP_NAME);
 

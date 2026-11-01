@@ -8,6 +8,7 @@
  *   node scripts/check-content.mjs
  */
 import { createRequire } from 'node:module';
+import { existsSync } from 'node:fs';
 const require = createRequire(import.meta.url);
 const C = require('../src/content.js');
 const ILLUS = require('../src/illus.js');
@@ -72,7 +73,7 @@ const hearts = new Set();
 CARDS.forEach((card, idx) => {
   card.gs.forEach(g => taught.add(g));
   C.heartWords.filter(h => h.after === card.key).forEach(h => hearts.add(h.w));
-  if (!ILLUS[card.anchor]) fail(`card ${card.key}: no picture for anchor "${card.anchor}"`);
+  if (!ILLUS[card.anchor] && !existsSync('assets/anchors/' + card.anchor + '.webp')) fail(`card ${card.key}: no picture for anchor "${card.anchor}"`);
   for (const kind of ['listen', 'read']) {
     const s = card[kind];
     if (!s) { if (kind === 'listen') fail(`card ${card.key}: no listen story`); continue; }
@@ -93,7 +94,14 @@ C.words2.forEach(w => { const why = decodable(w, taught); if (why) fail(`Level 2
 C.nonsense.forEach(w => { if (C.cvc.includes(w)) fail(`nonsense word "${w}" is in the real word list`); });
 C.nonsense2.forEach(w => { if (C.words2.includes(w)) fail(`nonsense word "${w}" is in the real word list`); const why = decodable(w, taught); if (why) fail(`nonsense word "${w}": ${why}`); });
 const need = new Set([...C.pictureWords, ...C.pictureWords2, ...C.level0.rhymeSets.flat(), ...C.level0.syllables.map(s => s[0]), ...C.level0.firstSound.flat()]);
-need.forEach(k => { if (!ILLUS[k]) fail(`no picture for "${k}"`); });
+const hasPhoto = k => existsSync('assets/pictures/' + k + '.webp') || existsSync('assets/anchors/' + k + '.webp');
+const lvl0 = new Set([...C.level0.rhymeSets.flat(), ...C.level0.syllables.map(s => s[0]), ...C.level0.firstSound.flat()]);
+lvl0.forEach(k => { if (!ILLUS[k] && !hasPhoto(k)) fail(`no picture for "${k}"`); });
+// Picture words without a picture yet are not a problem: the games skip them until one is added.
+const waiting = [...C.pictureWords, ...C.pictureWords2].filter(k => !ILLUS[k] && !hasPhoto(k));
+if (waiting.length) console.log(`\n${waiting.length} picture word(s) waiting for a picture (the games skip them for now): ${waiting.join(', ')}`);
+const kinds = Object.values(C.picKinds).flat();
+kinds.forEach(k => { if (![...C.pictureWords, ...C.pictureWords2].includes(k)) fail(`picKinds lists "${k}" but it is not a picture word`); });
 
 console.log(problems ? `\n${problems} problem(s)` : '\nAll content checks passed.');
 process.exit(problems ? 1 : 0);

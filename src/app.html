@@ -89,7 +89,8 @@
   .sound-tile .g.long { font-size: 1.15rem; line-height: 2.1rem; }
   .sc-letter.long .lo { font-size: 2.6rem; text-align: center; }
   .ltile.wide { width: 84px; }
-  .sound-tile svg { width: 54px; height: 54px; display: block; margin: 4px auto 0; }
+  .sound-tile svg, .sound-tile .apic { width: 54px; height: 54px; display: block; margin: 4px auto 0; }
+  .apic { object-fit: contain; }
   .sound-tile .w { font-size: 0.78rem; color: var(--text-soft); }
   .sound-tile.out { opacity: 0.45; }
   .sound-tile .star { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; margin: 0; }
@@ -144,7 +145,7 @@
   .ltile:disabled { opacity: 0.5; }
   .bins { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .bin { background: #fff; border: 3px dashed var(--border); border-radius: 16px; padding: 12px; cursor: pointer; text-align: center; font-size: 2.4rem; color: var(--navy-dark); }
-  .bin svg { width: 70px; height: 70px; display: block; margin: 0 auto; }
+  .bin svg, .bin .apic { width: 70px; height: 70px; display: block; margin: 0 auto; }
   .bin .sorted { font-size: 1rem; color: var(--text-soft); min-height: 1.4em; }
   .bin:hover { border-color: var(--ocean); }
   .markrow { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
@@ -161,7 +162,7 @@
   .sc-letter .lo { font-size: 6rem; line-height: 0.95; color: var(--navy-dark); }
   .sc-letter .up { font-size: 1.6rem; color: var(--text-soft); }
   .sc-pic { text-align: center; }
-  .sc-pic svg { width: 170px; height: 170px; }
+  .sc-pic svg, .sc-pic .apic { width: 170px; height: 170px; display: block; margin: 0 auto; }
   .sc-pic .word { font-size: 2.2rem; color: var(--navy-dark); }
   .sc-pic .word b { color: var(--coral-dark); }
   .rhyme { font-size: 1.35rem; line-height: 1.6; white-space: pre-line; color: var(--navy-dark); }
@@ -268,7 +269,7 @@
     .choice svg { width: 84px; height: 84px; }
     .bigword { font-size: 2.6rem; }
     .hugeletter { font-size: 5.5rem; }
-    .sc-letter, .sc-pic svg { width: 130px; height: 130px; }
+    .sc-letter, .sc-pic svg, .sc-pic .apic { width: 130px; height: 130px; }
     .sc-letter .lo { font-size: 4.6rem; }
     .slot { width: 50px; height: 64px; font-size: 2.1rem; }
     .ltile { width: 52px; height: 52px; font-size: 1.7rem; }
@@ -300,12 +301,35 @@ const FLOWER_IMGS = /*@@FLOWERS@@*/[];
 const FLOWER_META = /*@@FLOWER_META@@*/[];
 const PATCH_IMG = '@@PATCH@@';
 const CRITTERS = /*@@CRITTERS@@*/{ insects: [], pets: [] };
+// Debby's own pictures for the sound card anchor words (assets/anchors). Falls back to the line drawing.
+const ANCHOR_IMGS = /*@@ANCHORS@@*/{};
+// Debby's pictures for the game words (assets/pictures). Anchor pictures are used in the games too.
+const PICTURES = /*@@PICTURES@@*/{};
+const photoOf = k => PICTURES[k] || ANCHOR_IMGS[k];
+const hasPic = k => Boolean(photoOf(k) || ILLUS[k]);
+const gamePic = k => (photoOf(k) ? `<img class="apic" src="${photoOf(k)}" alt="" />` : svgPic(k));
+const anchorPic = k => ANCHOR_IMGS[k] ? `<img class="apic" src="${ANCHOR_IMGS[k]}" alt="${esc(k)}" />` : svgPic(k);
 const MASCOT = '@@MASCOT@@';
 const mascotImg = cls => `<img class="${cls || 'mascot'}" src="${MASCOT}" alt="Sage the hedgehog" />`;
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = a => a[Math.floor(Math.random() * a.length)];
+// Like pick, but goes through the whole list before anything comes back, and
+// never gives the same item twice in a row. One "deck" per game.
+const DECKS = {};
+function draw(key, arr) {
+  if (!arr.length) return undefined;
+  const sig = arr.map(x => (typeof x === 'string' ? x : JSON.stringify(x))).join('|');
+  let d = DECKS[key];
+  if (!d || d.sig !== sig || !d.q.length) {
+    const q = shuffle(arr);
+    if (d && q.length > 1 && q[q.length - 1] === d.last) [q[0], q[q.length - 1]] = [q[q.length - 1], q[0]];
+    d = DECKS[key] = { sig, q, last: d && d.last };
+  }
+  d.last = d.q.pop();
+  return d.last;
+}
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
@@ -323,9 +347,16 @@ const POOLS = {
 };
 const VOWELS = ['a', 'e', 'i', 'o', 'u'];
 const DIGRAPHS = ['sh', 'ch', 'th', 'wh', 'ck', 'ng', 'nk', 'ff', 'll', 'ss', 'zz', 'qu'];
-// Words that make sense in "It is a ___."
-const NOUNS = ('cat hat bat map pan fan can man rat bag jam cap mat sun bun nut cup bus mug bug rug tub hut pig pin bin lip dog log pot top box fox mop bed net pen hen web leg jet jug zip van kit kid cot cod den peg pet pup tin tag gap nap hip fig wig yak yam rag ' +
-  'fish dish shell ship shed chick bath moth duck sock lock rock neck bell doll hill king ring wing sink tank bank shop path chip chin sack pack deck').split(' ');
+// Read and Choose sentences. ___ is the picture word, NAME a decodable name.
+// A sentence is only used once every word in it can be read.
+const FRAMES = {
+  count: ['It is a ___.', 'I got a ___.', 'NAME got a ___.', 'Get the ___.', 'Did you get a ___?', 'NAME has a ___.'],
+  mass: ['It is ___.', 'I got ___.', 'NAME has ___.', 'Get the ___.'],
+  action: ['I can ___.', 'NAME can ___.', 'Can you ___?', 'Did NAME ___?'],
+  describe: ['It is ___.', 'Is it ___?'],
+};
+const NAMES = ['Sam', 'Pam', 'Tim', 'Ben', 'Meg', 'Gus', 'Dan', 'Liz', 'Max', 'Kim'];
+const kindOf = w => Object.keys(CONTENT.picKinds).find(k => CONTENT.picKinds[k].includes(w)) || 'count';
 const STAR_SVG = '<svg class="star" viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9.5 L16.5 14 L18.5 21 L12 17 L5.5 21 L7.5 14 L2 9.5 L9 9 Z" fill="#FBBF24" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/></svg>';
 const BACK = '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -357,7 +388,7 @@ function graphemes(w) {
 function taughtSet(upTo) { const t = new Set(); CARDS.slice(0, upTo + 1).forEach(c => c.gs.forEach(g => t.add(g))); return t; }
 function canRead(w, upTo) { const t = taughtSet(upTo); return graphemes(w).every(g => t.has(g)); }
 function wordsFor(L) { return POOLS[L].words.filter(w => canRead(w, state.upTo)); }
-function picsFor(L) { return POOLS[L].pics.filter(w => canRead(w, state.upTo) && ILLUS[w]); }
+function picsFor(L) { return POOLS[L].pics.filter(w => canRead(w, state.upTo) && hasPic(w)); }
 function fakesFor(L) { return POOLS[L].fakes.filter(w => canRead(w, state.upTo)); }
 function cardsTaught(L) { return CARDS.slice(0, state.upTo + 1).filter(c => c.level === L); }
 function heartsUpTo(upTo) {
@@ -568,20 +599,20 @@ const ITEMS = {
     }, 'letter');
   },
   pic2word(el, finish, L) {
-    const w = pick(picsFor(L));
-    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    const w = draw('pic2word' + L, picsFor(L));
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${gamePic(w)}</div></div>`);
     choiceButtons(el, shuffle([w, ...nearWords(w, wordsFor(L), 2)]).map(x => ({ x, html: esc(x) })), (it, b, wrap) => {
       lockChoices(wrap); b.classList.add(it.x === w ? 'right' : 'wrong');
       finish(it.x === w, w, it.x, it.x === w ? 'Yes!' : `It says ${w}.`);
     });
   },
   build(el, finish, L) {
-    const w = pick(picsFor(L));
+    const w = draw('build' + L, picsFor(L));
     const gs = graphemes(w);
     const pool = [...taughtSet(state.upTo)].filter(g => !gs.includes(g));
     const levelGs = new Set(levelCards(L).flatMap(c => c.gs));
     const extra = shuffle(pool.filter(g => levelGs.has(g))).slice(0, 2).concat(shuffle(pool.filter(g => !levelGs.has(g))).slice(0, 2));
-    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${gamePic(w)}</div></div>`);
     tileBoard(el.querySelector('.stage'), gs, shuffle([...gs, ...extra]), finish, w);
   },
   sort(el, finish, L) {
@@ -594,9 +625,9 @@ const ITEMS = {
       catOf = w => { const hit = graphemes(w).filter(g => gs2.includes(g)); return hit.length === 1 ? hit[0] : null; };
       cats = gs2.filter(g => wordsFor(2).some(w => catOf(w) === g));
     }
-    const two = shuffle(cats).slice(0, 2);
-    const w = pick(wordsFor(L).filter(x => two.includes(catOf(x))));
-    const picOf = g => { const c = CARDS.find(cd => cd.gs.includes(g)); return c && (c.gs.length === 1 || c.anchor.includes(g)) ? svgPic(c.anchor) : ''; };
+    const w = draw('sort' + L, wordsFor(L).filter(x => cats.includes(catOf(x))));
+    const two = shuffle([catOf(w), pick(cats.filter(c => c !== catOf(w)))]);
+    const picOf = g => { const c = CARDS.find(cd => cd.gs.includes(g)); return c && (c.gs.length === 1 || c.anchor.includes(g)) ? anchorPic(c.anchor) : ''; };
     el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div><div class="bins"></div>`);
     const bins = el.querySelector('.bins');
     two.forEach(v => {
@@ -615,7 +646,7 @@ const ITEMS = {
   realfake(el, finish, L) {
     const fakes = fakesFor(L);
     const real = Math.random() < 0.5 || fakes.length === 0;
-    const w = real ? pick(wordsFor(L)) : pick(fakes);
+    const w = real ? draw('real' + L, wordsFor(L)) : draw('fake' + L, fakes);
     el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div>`);
     choiceButtons(el, [{ r: true, html: 'Real word' }, { r: false, html: 'Made up' }], (it, b, wrap) => {
       lockChoices(wrap); b.classList.add(it.r === real ? 'right' : 'wrong');
@@ -623,18 +654,26 @@ const ITEMS = {
     }, 'sentence');
   },
   readchoose(el, finish, L) {
-    const w = pick(picsFor(L));
-    const others = nearWords(w, wordsFor(L).filter(x => NOUNS.includes(x)), 2);
-    const s = x => `It is a ${x}.`;
     const hearts = heartsUpTo(state.upTo);
-    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${svgPic(w)}</div></div>`);
+    const hw = new Set(hearts.map(h => h.w.toLowerCase()));
+    const readable = t => t.replace(/[.?!]/g, '').split(' ').every(x => hw.has(x.toLowerCase()) || canRead(x.toLowerCase(), state.upTo));
+    const name = draw('rcname', NAMES.filter(n => canRead(n.toLowerCase(), state.upTo)));
+    const framesOf = k => FRAMES[k].map(f => (name ? f.split('NAME').join(name) : f)).filter(f => !f.includes('NAME') && readable(f.replace('___', '')));
+    // Other words of the same kind, for the wrong answers. They do not need a picture.
+    const sameKind = w => POOLS[L].pics.filter(x => x !== w && kindOf(x) === kindOf(w) && canRead(x, state.upTo));
+    const ok = picsFor(L).filter(w => framesOf(kindOf(w)).length && sameKind(w).length >= 2);
+    const w = draw('readchoose' + L, ok.length ? ok : picsFor(L));
+    const frame = pick(framesOf(kindOf(w)).length ? framesOf(kindOf(w)) : ['It is a ___.']);
+    const others = nearWords(w, sameKind(w).length >= 2 ? sameKind(w) : wordsFor(L), 2);
+    const s = x => frame.replace('___', x);
+    el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="big-pic">${gamePic(w)}</div></div>`);
     choiceButtons(el, shuffle([w, ...others]).map(x => ({ x, html: `<span>${markHearts(s(x), hearts)}</span>` })), (it, b, wrap) => {
       lockChoices(wrap); b.classList.add(it.x === w ? 'right' : 'wrong');
-      finish(it.x === w, s(w), s(it.x), it.x === w ? 'Yes!' : `It is a ${w}.`);
+      finish(it.x === w, s(w), s(it.x), it.x === w ? 'Yes!' : s(w));
     }, 'sentence');
   },
   heart(el, finish, L) {
-    const h = pick(heartsFor(L));
+    const h = draw('heart' + L, heartsFor(L));
     el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword" style="padding-top:12px">${heartHTML(h.w, h)}</div><button class="action" data-act="ready">I know it. Hide it!</button></div>`);
     el.querySelector('[data-act=ready]').addEventListener('click', () => {
       el.querySelector('.stage').innerHTML = '<div class="bigword" style="font-size:1.5rem">Which one was it?</div>';
@@ -662,18 +701,18 @@ const ITEMS = {
     }, 'letter');
   },
   wordread(el, finish, L) {
-    const w = pick(wordsFor(L));
+    const w = draw('wordread' + L, wordsFor(L));
     el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword">${esc(w)}</div></div>`);
     markButtons(el, ok => finish(ok, w, ok ? 'read it' : 'not yet', ok ? 'Well done!' : `It says ${w}.`));
   },
   dict(el, finish, L) {
-    const w = pick(wordsFor(L));
+    const w = draw('dict' + L, wordsFor(L));
     const letters = [...taughtSet(state.upTo)];
     el.insertAdjacentHTML('beforeend', `<div class="adult-note"><b>Say:</b> ${esc(w)}</div><div class="stage" data-reuse="1"></div>`);
     tileBoard(el.querySelector('.stage'), graphemes(w), letters, finish, w);
   },
   heartflash(el, finish, L) {
-    const h = pick(heartsFor(L));
+    const h = draw('heartflash' + L, heartsFor(L));
     el.insertAdjacentHTML('beforeend', `<div class="stage"><div class="bigword" style="padding-top:12px">${heartHTML(h.w, h)}</div></div>`);
     markButtons(el, ok => finish(ok, h.w, ok ? 'read it' : 'not yet', ok ? 'Well done!' : `It says ${h.w}.`));
   },
@@ -796,7 +835,7 @@ function renderHome(app) {
     const lv = state.level;
     const opts = [1, 2].map(n => `<optgroup label="Level ${n}">` + CARDS.map((c, i) => c.level === n ? `<option value="${i}" ${i === state.upTo ? 'selected' : ''}>${esc(c.g)}</option>` : '').join('') + '</optgroup>').join('');
     const intro = lv === 1 ? 'One sound at a time. Each sound card has an anchor word, a rhyme, stories and questions.'
-      : 'Two letters, one sound. sh, ch, th, wh, ck, ng and nk are each one sound, and short words double ff, ll, ss and zz at the end.';
+      : 'Short words double ff, ll, ss and zz at the end. Then two letters, one sound: sh, ch, th, wh, ck, ng and nk.';
     h += `<p class="subtext">${intro}</p>
       <div class="range-row"><label for="upto"><b>Sounds learned so far, up to:</b></label><select id="upto">${opts}</select></div>
       <p class="muted" style="margin:6px 0 0">Practice games only use words made from these sounds.</p></div>`;
@@ -805,7 +844,7 @@ function renderHome(app) {
     [...new Set(cs.map(c => c.group))].forEach(gp => {
       const grp = cs.filter(c => c.group === gp);
       h += `<div class="muted" style="margin:10px 2px 6px">Group ${gp}: ${grp.map(c => esc(c.g)).join(', ')}</div><div class="sound-grid">` +
-        grp.map(c => `<button class="sound-tile ${cardIndex(c.key) > state.upTo ? 'out' : ''}" data-card="${c.key}">${done('card_' + c.key) ? STAR_SVG : ''}<div class="g ${c.g.length > 3 ? 'long' : ''}">${esc(c.g)}</div>${svgPic(c.anchor)}<div class="w">${esc(anchorLabel(c))}</div></button>`).join('') + '</div>';
+        grp.map(c => `<button class="sound-tile ${cardIndex(c.key) > state.upTo ? 'out' : ''}" data-card="${c.key}">${done('card_' + c.key) ? STAR_SVG : ''}<div class="g ${c.g.length > 3 ? 'long' : ''}">${esc(c.g)}</div>${anchorPic(c.anchor)}<div class="w">${esc(anchorLabel(c))}</div></button>`).join('') + '</div>';
     });
     const games = Object.values(ACTS).filter(a => a.level === lv);
     const tiles = list => list.map(a => { const why = notReady(a); return why ? lockedTileHTML(a, why) : tileHTML(a, done(a.key) ? 'Practised' : ''); }).join('');
@@ -870,7 +909,7 @@ function renderCard(app, key) {
   const up = upperOf(c);
   let h = backHTML(`Level ${c.level} sound cards`);
   h += `<div class="card"><div class="sc-top"><div class="sc-letter ${c.g.length > 3 ? 'long' : ''}"><div class="lo">${esc(c.g)}</div><div class="up">${esc(up || (c.pos === 'end' ? 'at the end' : ''))}</div></div>
-    <div class="sc-pic">${svgPic(c.anchor)}<div class="word">${anchorHTML(c)}</div></div></div>
+    <div class="sc-pic">${anchorPic(c.anchor)}<div class="word">${anchorHTML(c)}</div></div></div>
     ${state.mode === 'adult' ? `<div class="adult-note" style="margin-top:14px"><b>Sound:</b> ${esc(guide(c))} Say the sound, not the letter names. The learner traces the letters while saying the sound.</div>` : ''}</div>`;
   h += `<div class="card"><div class="section-heading" style="margin-top:0">Rhyme <small>Say it together</small></div><div class="rhyme">${esc(c.rhyme)}</div></div>`;
   if (newHearts.length) {

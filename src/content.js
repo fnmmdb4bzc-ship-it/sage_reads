@@ -629,7 +629,32 @@ CONTENT.level1 = [
 // pos: where the anchor word shows the spelling ('start' or 'end').
 CONTENT.level2 = [
   {
-    g: 'sh', anchor: 'ship', group: 1, pos: 'start',
+    g: 'ff ll ss zz', key: 'floss', gs: ['ff', 'll', 'ss', 'zz'], anchor: 'bell', group: 1, pos: 'end',
+    say: 'The doubling rule: a short word with a short vowel that ends in f, l, s or z doubles it, as in bell, puff, kiss and buzz.',
+    rhyme: 'Puff and bell, and kiss and buzz,\nshort vowel, double the end, that is what it does!',
+    listen: {
+      title: 'The School Bell',
+      text: 'Ring, ring! The school bell rang. Bella packed her bag and ran to the gate. Her dog Fluff was waiting with Mum. Fluff wagged his tail so hard that he nearly fell over!',
+      qs: [
+        { q: 'What rang?', o: ['the school bell', 'the phone', 'a clock'] },
+        { q: 'Who was waiting at the gate?', o: ['Fluff and Mum', 'Dad', 'Gran'] },
+        { q: 'What is the dog\'s name?', o: ['Fluff', 'Rex', 'Bella'] },
+        { q: 'How did Fluff feel?', o: ['very happy', 'scared', 'tired'], think: true },
+      ],
+    },
+    read: {
+      title: 'Bill on the Hill',
+      text: 'Bill is on a big hill. Nell is on the hill as well. Puff, puff! "The hill is big!" said Bill. Buzz! A bug is on Bill. Bill fell in the mud. "Are you well?" said Nell. Bill is a mess, but Bill is well.',
+      qs: [
+        { q: 'Where are Bill and Nell?', o: ['on a big hill', 'in the bath', 'at the shop'] },
+        { q: 'What landed on Bill?', o: ['a bug', 'a bell', 'a doll'] },
+        { q: 'Where did Bill fall?', o: ['in the mud', 'in a dish', 'on Nell'] },
+        { q: 'Is Bill all right at the end?', o: ['yes, he is well', 'no, he is sick', 'he is lost'] },
+      ],
+    },
+  },
+  {
+    g: 'sh', anchor: 'ship', group: 2, pos: 'start',
     say: '/sh/ as in ship. Finger to lips, like asking for quiet.',
     rhyme: 'Sh, sh, sh, the baby is asleep,\nthe ship on the sea does not make a peep.',
     listen: {
@@ -654,7 +679,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'ch', anchor: 'chick', group: 1, pos: 'start',
+    g: 'ch', anchor: 'chick', group: 2, pos: 'start',
     say: '/ch/ as in chick. A short sneeze sound, not "chuh".',
     rhyme: 'Chick, chick, chick, come and eat,\nch, ch, ch, a crunchy treat.',
     listen: {
@@ -679,7 +704,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'th', anchor: 'thumb', group: 1, pos: 'start',
+    g: 'th', anchor: 'thumb', group: 2, pos: 'start',
     say: '/th/ as in thumb. Tongue peeps out between the teeth.',
     rhyme: 'Thumbs up, thumbs up, one and two,\nth, th, th, I am proud of you.',
     listen: {
@@ -704,7 +729,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'wh', anchor: 'whale', group: 1, pos: 'start',
+    g: 'wh', anchor: 'whale', group: 2, pos: 'start',
     say: '/w/ as in whale. Most of us say wh the same as w.',
     rhyme: 'The whale in the waves goes whoosh and whee,\nwh, wh, wh, out in the sea.',
     listen: {
@@ -729,7 +754,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'ck', anchor: 'duck', group: 2, pos: 'end',
+    g: 'ck', anchor: 'duck', group: 3, pos: 'end',
     say: '/k/ at the end of duck. We use ck straight after a short vowel.',
     rhyme: 'Quack goes the duck, quack, quack, quack,\nck, ck, ck, at the end, at the back.',
     listen: {
@@ -754,32 +779,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'ff ll ss zz', key: 'floss', gs: ['ff', 'll', 'ss', 'zz'], anchor: 'bell', group: 2, pos: 'end',
-    say: 'The doubling rule: a short word with a short vowel that ends in f, l, s or z doubles it, as in bell, puff, kiss and buzz.',
-    rhyme: 'Puff and bell, and kiss and buzz,\nshort vowel, double the end, that is what it does!',
-    listen: {
-      title: 'The School Bell',
-      text: 'Ring, ring! The school bell rang. Bella packed her bag and ran to the gate. Her dog Fluff was waiting with Mum. Fluff wagged his tail so hard that he nearly fell over!',
-      qs: [
-        { q: 'What rang?', o: ['the school bell', 'the phone', 'a clock'] },
-        { q: 'Who was waiting at the gate?', o: ['Fluff and Mum', 'Dad', 'Gran'] },
-        { q: 'What is the dog\'s name?', o: ['Fluff', 'Rex', 'Bella'] },
-        { q: 'How did Fluff feel?', o: ['very happy', 'scared', 'tired'], think: true },
-      ],
-    },
-    read: {
-      title: 'Bill on the Hill',
-      text: 'Bill is on a big hill. Nell is on the hill as well. Puff, puff! "The hill is big!" said Bill. Buzz! A bug is on Bill. Bill fell in the mud. "Are you well?" said Nell. Bill is a mess, but he is well.',
-      qs: [
-        { q: 'Where are Bill and Nell?', o: ['on a big hill', 'in the bath', 'at the shop'] },
-        { q: 'What landed on Bill?', o: ['a bug', 'a bell', 'a doll'] },
-        { q: 'Where did Bill fall?', o: ['in the mud', 'in a dish', 'on Nell'] },
-        { q: 'Is Bill all right at the end?', o: ['yes, he is well', 'no, he is sick', 'he is lost'] },
-      ],
-    },
-  },
-  {
-    g: 'ng', anchor: 'king', group: 2, pos: 'end',
+    g: 'ng', anchor: 'king', group: 3, pos: 'end',
     say: '/ng/ at the end of king. Keep it as one sound, do not add a g.',
     rhyme: 'The king can sing a ding-dong song,\nng, ng, ng, all day long.',
     listen: {
@@ -804,7 +804,7 @@ CONTENT.level2 = [
     },
   },
   {
-    g: 'nk', anchor: 'sink', group: 2, pos: 'end',
+    g: 'nk', anchor: 'sink', group: 3, pos: 'end',
     say: '/nk/ at the end of sink, as in think and bank.',
     rhyme: 'Pink ink, wink, wink,\nnk, nk, nk, down the sink.',
     listen: {
@@ -831,36 +831,58 @@ CONTENT.level2 = [
 ];
 
 // Level 2 words: Level 1 rules plus sh ch th wh ck, the doubling rule, ng and nk.
-CONTENT.words2 = ('ship shop shed shell shut fish dish wish cash mash rash shin shot hush rush dash ' +
-  'chin chip chop chat check chick much such rich chug chess chill ' +
-  'thin thick this that them then with bath moth path math ' +
-  'when whip whiz which ' +
-  'duck sock lock rock neck back pack sack kick pick lick sick tick deck peck luck tuck ' +
-  'bell well tell sell fell hill fill pill will doll dull puff cuff huff off kiss miss hiss mess less boss toss fuss buzz fizz jazz ' +
-  'king ring sing wing thing long song bang hang sung lung ' +
-  'sink pink wink link think bank tank sank honk junk sunk bunk').split(' ');
+CONTENT.words2 = ('ship shop shed shell shut fish dish wish cash mash rash shin shot hush rush dash chin chip chop ' +
+  'chat check chick much such rich chug chess chill thin thick this that them then with bath moth ' +
+  'path math when whip whiz which duck sock lock rock neck back pack sack kick pick lick sick tick ' +
+  'deck peck luck tuck bell well tell sell fell hill fill pill will doll dull puff cuff huff off ' +
+  'kiss miss hiss mess less boss toss fuss buzz fizz jazz king ring sing wing thing long song bang ' +
+  'hang sung lung sink pink wink link think bank tank sank honk junk sunk bunk mesh posh chap thud ' +
+  'whiff rack tack wick dock mock yuck quack quick yell bill dill mill till hull gull buff mass ' +
+  'pass moss loss fuzz fang rang sang gang ding ping gong hung rung ink mink rink dunk thank shock ' +
+  'shack bash sash mush shun chum').split(' ');
 
-CONTENT.nonsense2 = ('shib chom thep whid jeck vock bish tull pess fiss ning hink shog chab thog whap gock nuff').split(' ');
+CONTENT.nonsense2 = ('shib chom thep whid jeck vock bish tull pess fiss ning hink shog chab thog whap gock nuff shap ' +
+  'shem shum shon chet chup thub thap thim whep whob whug dack jick rell gell mell zull voss hess ' +
+  'zuff pung vang mank vunk shink thock whick chell shoff thess').split(' ');
 
-CONTENT.pictureWords2 = ('fish dish shell ship shed chick bath moth duck sock lock rock bell doll hill king ring wing sink').split(' ');
+CONTENT.pictureWords2 = ('fish dish shell ship shed shop cash hush chick chin chip chop chess bath moth path duck sock ' +
+  'lock rock neck deck sack kick lick peck bell doll hill well pill moss kiss hiss buzz king ring ' +
+  'wing sing gong fang sink pink wink ink tank bunk think').split(' ');
 
 /* ---------------- Word banks ---------------- */
 // Level 1 real CVC words, no blends and no digraphs. The app only offers a
 // word once every letter in it has been taught.
-CONTENT.cvc = ('sat pat tap tip pit sit nap pin tin nip pan tan man map mat mad sad dip did dim ' +
-  'pig dig big gap tag got dog top pot not on mop cot cap can cat cod kit kid ' +
-  'peg pet net ten pen men den get met set up pup cup mud sun nut gum tub rug ' +
-  'rat rip red ran rot hat hit hot him hen hug hut hip bat bag bed bin bus but bit bud bun ' +
-  'fan fat fig fin fun fog fed lap lid lip lit log lot leg let jam jet jug jog job ' +
-  'van vet web wet wig win wag box fox six mix fix wax yes yet yum yap zip zap quiz quit').split(' ');
+CONTENT.cvc = ('sat pat tap tip pit sit nap pin tin nip pan tan man map mat mad sad dip did dim pig dig big gap ' +
+  'tag got dog top pot not on mop cot cap can cat cod kit kid peg pet net ten pen men den get met ' +
+  'set up pup cup mud sun nut gum tub rug rat rip red ran rot hat hit hot him hen hug hut hip bat ' +
+  'bag bed bin bus but bit bud bun fan fat fig fin fun fog fed lap lid lip lit log lot leg let jam ' +
+  'jet jug jog job van vet web wet wig win wag box fox six mix fix wax yes yet yum yap zip zap ' +
+  'quiz quit at an if in it us ox bad dad had ham jab lab pad ram rag tab yak dam cab bib fib fit ' +
+  'hid jig nib rib rid sip kin cob cop dot hog hop jot mob nod pod pop rod sob beg bet gem hem led ' +
+  'cub cut dug hum nun rub run sub sum tug yam mug bug').split(' ');
 
 // Made-up words for "Real or made up?". Checked by hand to not be English words.
-CONTENT.nonsense = ('tib nim pid sut mog dap gom kep heg bim fip lom jad vop wem zut quib pab sep mib ' +
-  'dop gid rup hib lun jeb wib yat zom fod sab tep nug rop').split(' ');
+CONTENT.nonsense = ('tib nim pid sut mog dap gom kep heg bim fip lom jad vop wem zut quib pab sep mib dop gid rup ' +
+  'hib lun jeb wib yat zom fod sab tep nug rop baf bev bix cag dut dov gub hep hox jud kib ' +
+  'kov lem lut mep mup nep pof pum rab ruv sef tov tud vam vib wid wup yeb yog zab zev quam ' +
+  'quep jop kag lif nid tob vad yib zop bup cim fon gix haf jun lep mev nop pib sul tif vup yun ' +
+  'zid').split(' ');
 
-// Pictures available for word activities (keys in ILLUS).
-CONTENT.pictureWords = ('cat hat bat map pan fan can man rat bag jam cap mat sun bun nut cup bus mug bug rug tub hut ' +
-  'pig pin bin lip six dog log pot top box fox mop bed net pen ten hen web leg jet jug zip van').split(' ');
+// Picture words for Picture to Word, Build the Word and Read and Choose.
+// A word only appears once it has a picture (Debby's picture in assets/pictures or
+// assets/anchors, or a line drawing in illus.js) and its sounds are taught.
+CONTENT.pictureWords = ('cat hat bat map pan fan can man rat bag cap mat van ram ham yam dam rag jam pig pin bin lip wig ' +
+  'fin bib lid kit fig zip six dog log pot top box fox mop cot pod rod dot bed net pen hen web leg ' +
+  'jet vet peg gem ten red wet sun bun nut cup bus mug bug rug tub hut pup cub jug gum mud nap dig ' +
+  'sit sip mix dip hop jog hug run tug cut beg sad hot').split(' ');
+
+// What kind of word each picture is, so Read and Choose uses a sentence that makes sense.
+// Anything not listed here is a thing you can count ("It is a cat.").
+CONTENT.picKinds = {
+  mass: 'jam gum mud ham ink moss cash chess'.split(' '),
+  action: 'nap dig sit sip mix dip hop jog hug run tug cut beg chop kick lick peck kiss hiss buzz sing wink think hush'.split(' '),
+  describe: 'sad hot wet red six ten pink'.split(' '),
+};
 
 /* ---------------- Level 0 ---------------- */
 CONTENT.level0 = {

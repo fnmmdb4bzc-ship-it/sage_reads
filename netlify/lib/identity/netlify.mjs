@@ -88,9 +88,12 @@ const usernameOf = user =>
  * tab in the Netlify UI writes.
  */
 const rolesOf = user => {
-  if (Array.isArray(user.roles) && user.roles.length) return user.roles;
-  if (Array.isArray(user.appMetadata?.roles)) return user.appMetadata.roles;
-  return user.role ? [user.role] : [];
+  let roles = [];
+  if (Array.isArray(user.roles) && user.roles.length) roles = user.roles;
+  else if (Array.isArray(user.appMetadata?.roles)) roles = user.appMetadata.roles;
+  else if (user.role) roles = [user.role];
+  // "Admin" or " admin " typed in the Netlify screen should still count.
+  return roles.map(r => String(r).trim().toLowerCase());
 };
 
 const identityOf = user => ({
@@ -187,7 +190,12 @@ export async function signIn({ identifier, password }) {
   try {
     return identityOf(await login(addressFor(identifier), password));
   } catch (err) {
-    throw new HttpError(401, 'that username or password is not right');
+    // Netlify Identity refuses a sign-in until the address is confirmed, and
+    // that refusal looked exactly like a wrong password. Say which it is.
+    if (/confirm/i.test(String(err && (err.message || err.error_description || err)))) {
+      throw new HttpError(401, 'please confirm your email address first: open the email from this site (check spam too) and click the link in it');
+    }
+    throw new HttpError(401, 'that email or password is not right');
   }
 }
 

@@ -76,6 +76,12 @@ export const TERMS = {
   ],
   "2": [
     {
+      "title": "Sounds ff ll ss zz",
+      "keys": [
+        "card_floss"
+      ]
+    },
+    {
       "title": "Sounds sh, ch, th, wh",
       "keys": [
         "card_sh",
@@ -85,10 +91,9 @@ export const TERMS = {
       ]
     },
     {
-      "title": "Sounds ck, ff ll ss zz, ng, nk",
+      "title": "Sounds ck, ng, nk",
       "keys": [
         "card_ck",
-        "card_floss",
         "card_ng",
         "card_nk"
       ]
@@ -158,12 +163,12 @@ export const AREA_OF = {
   "l1_wordread": "words",
   "l1_dict": "words",
   "l1_heartflash": "words",
+  "card_floss": "stories",
   "card_sh": "stories",
   "card_ch": "stories",
   "card_th": "stories",
   "card_wh": "stories",
   "card_ck": "stories",
-  "card_floss": "stories",
   "card_ng": "stories",
   "card_nk": "stories",
   "l2_pic2word": "words",
